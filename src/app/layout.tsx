@@ -83,14 +83,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${jetbrainsMono.variable} h-full`}>
+    <html lang="en" className={`${jetbrainsMono.variable}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="h-full overflow-hidden font-[family-name:var(--font-mono)]">
+      <body className="min-h-screen font-[family-name:var(--font-mono)]">
         {/* Hidden semantic HTML for screen readers and crawlers */}
         <div className="sr-only" aria-hidden="false">
           <h1>Nguyen Minh An — DevOps Engineer</h1>
