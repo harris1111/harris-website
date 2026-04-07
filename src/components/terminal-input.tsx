@@ -104,7 +104,7 @@ export function TerminalInput({
       onClick={focusInput}
     >
       <span className="text-term-prompt shrink-0">
-        harris@cv:{cwd}${" "}
+        harris@cv:{cwd}${"\u00A0"}
       </span>
       <div className="relative flex-1">
         <input

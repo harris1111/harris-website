@@ -13,7 +13,7 @@ function OutputLine({ entry, cwd }: { entry: OutputEntry; cwd: string }) {
     return (
       <div className="flex gap-0">
         <span className="text-term-prompt shrink-0">
-          harris@cv:{cwd}${" "}
+          harris@cv:{cwd}${"\u00A0"}
         </span>
         <span className="text-term-fg">{entry.content}</span>
       </div>
