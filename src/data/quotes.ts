@@ -1,0 +1,23 @@
+/** DevOps and tech fortune quotes */
+export const QUOTES = [
+  "It works on my machine — so we ship your machine.",
+  "There is no cloud, it's just someone else's computer.",
+  "Monitoring is not optional. It's how you sleep at night.",
+  "The best incident response is prevention.",
+  "Automate yourself out of a job, then find a better one.",
+  "If it's not in version control, it doesn't exist.",
+  "Infrastructure as code: because clicking is not reproducible.",
+  "The only good deployment is a boring deployment.",
+  "Containers don't fix your code, they just make it portable.",
+  "kubectl get pods -A | grep -v Running — the morning ritual.",
+  "GitOps: because git blame is also an audit trail.",
+  "Observability > Monitoring. You can't alert on what you can't see.",
+  "YAML engineer is a real job title. Fight me.",
+  "The S in Kubernetes stands for Simple.",
+  "There are two hard things: cache invalidation, naming things, and off-by-one errors.",
+  "Works on my cluster™",
+  "Terraform plan looks good. Terraform apply... oh no.",
+  "Docker: it works on my machine. Kubernetes: it works on my cluster.",
+  "The best time to write tests was yesterday. The second best time is now.",
+  "A good pipeline is invisible. A bad pipeline is the only thing anyone talks about.",
+];
