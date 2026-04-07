@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getAllPosts } from "@/lib/blog";
 import Link from "next/link";
+import { ThemeLoader } from "@/components/theme-loader";
 
 export const metadata: Metadata = {
   title: "Blog — Nguyen Minh An | DevOps Engineer",
@@ -12,6 +13,7 @@ export default function BlogListPage() {
 
   return (
     <main className="min-h-screen bg-term-bg text-term-fg">
+      <ThemeLoader />
       <div className="mx-auto max-w-3xl px-6 py-10">
         <header className="mb-8">
           <h1 className="text-2xl font-bold text-term-accent">
