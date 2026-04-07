@@ -1,11 +1,25 @@
 import { register } from "./registry";
 import { themes, themeNames, applyTheme } from "@/themes/themes";
 
+function listThemes(currentTheme: string) {
+  const lines = themeNames.map((t) => {
+    const theme = themes[t];
+    const marker = t === currentTheme ? " ◄ current" : "";
+    return `  ${t.padEnd(14)} ${theme.label}${marker}`;
+  });
+  return { type: "text" as const, content: ["Themes:", "", ...lines].join("\n") };
+}
+
 register({
   name: "theme",
   description: "Change terminal theme",
   usage: "theme [name | --list]",
-  execute: (args, ctx) => {
+  execute: (args, ctx, flags) => {
+    // --list flag (parsed by registry)
+    if (flags.list) {
+      return listThemes(ctx.theme);
+    }
+
     // No args → show current theme
     if (args.length === 0) {
       return {
@@ -16,14 +30,9 @@ register({
 
     const name = args[0].toLowerCase();
 
-    // List themes
-    if (name === "--list" || name === "list") {
-      const lines = themeNames.map((t) => {
-        const theme = themes[t];
-        const marker = t === ctx.theme ? " ◄ current" : "";
-        return `  ${t.padEnd(14)} ${theme.label}${marker}`;
-      });
-      return { type: "text", content: ["Themes:", "", ...lines].join("\n") };
+    // "theme list" (positional arg)
+    if (name === "list") {
+      return listThemes(ctx.theme);
     }
 
     // Switch theme

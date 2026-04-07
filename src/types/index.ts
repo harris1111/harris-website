@@ -21,7 +21,8 @@ export interface CommandHandler {
   usage?: string;
   execute: (
     args: string[],
-    ctx: TerminalContext
+    ctx: TerminalContext,
+    flags: Record<string, string | boolean>
   ) => CommandOutput | Promise<CommandOutput>;
 }
 
