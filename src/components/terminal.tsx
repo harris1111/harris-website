@@ -6,13 +6,13 @@ import { TerminalInput } from "./terminal-input";
 import { useTerminal } from "@/hooks/use-terminal";
 import { useTypewriter } from "@/hooks/use-typewriter";
 import { WELCOME_LINES } from "@/data/ascii-banner";
-import { registerBuiltins } from "@/commands/builtin";
+import { registerAllCommands } from "@/commands/builtin";
 
 // Register commands once on module load
 let commandsRegistered = false;
 function ensureCommands() {
   if (!commandsRegistered) {
-    registerBuiltins();
+    registerAllCommands();
     commandsRegistered = true;
   }
 }

@@ -100,6 +100,51 @@ export interface BlogPost extends BlogPostMeta {
   content: string;
 }
 
+/* === Profile Data === */
+
+export interface Skill {
+  category: string;
+  technologies: string[];
+}
+
+export interface Experience {
+  company: string;
+  slug: string;
+  role: string;
+  period: string;
+  location: string;
+  bullets: string[];
+}
+
+export interface Education {
+  institution: string;
+  degree: string;
+  period: string;
+  gpa: string;
+}
+
+export interface SocialLink {
+  platform: string;
+  url: string;
+  label: string;
+}
+
+export interface Profile {
+  name: string;
+  role: string;
+  location: string;
+  phone: string;
+  email: string;
+  summary: string;
+  skills: Skill[];
+  experience: Experience[];
+  education: Education;
+  certifications: string[];
+  languages: { name: string; score: string }[];
+  social: SocialLink[];
+  motto: string;
+}
+
 /* === Guestbook === */
 
 export interface GuestbookEntry {

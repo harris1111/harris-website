@@ -1,6 +1,6 @@
 import { register, getAllCommands } from "./registry";
 
-/** Register built-in commands: help, clear, history */
+/** Register built-in commands: help, clear, whoami, echo, man */
 export function registerBuiltins() {
   register({
     name: "help",
@@ -37,6 +37,32 @@ export function registerBuiltins() {
   });
 
   register({
+    name: "man",
+    description: "Manual page for a command",
+    usage: "man <command>",
+    execute: (args) => {
+      if (!args[0]) {
+        return { type: "error", content: "Usage: man <command>" };
+      }
+      const cmds = getAllCommands();
+      const target = cmds.find((c) => c.name === args[0].toLowerCase());
+      if (!target) {
+        return { type: "error", content: `No manual entry for ${args[0]}` };
+      }
+      return {
+        type: "text",
+        content: [
+          `NAME`,
+          `    ${target.name} — ${target.description}`,
+          "",
+          `SYNOPSIS`,
+          `    ${target.usage || target.name}`,
+        ].join("\n"),
+      };
+    },
+  });
+
+  register({
     name: "clear",
     description: "Clear the terminal screen",
     execute: () => ({ type: "clear", content: null }),
@@ -57,4 +83,21 @@ export function registerBuiltins() {
       content: args.join(" ") || "",
     }),
   });
+}
+
+/** Import all CV command modules (side-effect: registers them) */
+export function registerAllCommands() {
+  registerBuiltins();
+  // These imports register commands as side effects
+  require("./about");
+  require("./skills");
+  require("./experience");
+  require("./education");
+  require("./contact");
+  require("./social");
+  require("./certifications");
+  require("./projects");
+  require("./timeline");
+  require("./download-cv");
+  require("./history-cmd");
 }
