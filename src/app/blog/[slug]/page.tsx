@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPost, getAllSlugs } from "@/lib/blog";
-import { markdownToHtml } from "@/lib/markdown";
+import { markdownToHtml, extractToc } from "@/lib/markdown";
+import { ThemeLoader } from "@/components/theme-loader";
 import type { Metadata } from "next";
 
 interface PageProps {
@@ -35,9 +36,11 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (!post) notFound();
 
   const htmlContent = await markdownToHtml(post.content);
+  const toc = extractToc(post.content);
 
   return (
     <main className="min-h-screen bg-term-bg text-term-fg">
+      <ThemeLoader />
       <article className="mx-auto max-w-3xl px-6 py-12">
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-term-accent mb-2">
@@ -55,6 +58,30 @@ export default async function BlogPostPage({ params }: PageProps) {
             ))}
           </div>
         </header>
+
+        {/* Table of Contents */}
+        {toc.length > 0 && (
+          <nav className="mb-8 p-4 border border-term-border rounded bg-term-bg">
+            <h2 className="text-sm font-bold text-term-warning mb-2">
+              Table of Contents
+            </h2>
+            <ul className="space-y-1 text-sm">
+              {toc.map((item) => (
+                <li
+                  key={item.id}
+                  className={item.level === 3 ? "pl-4" : ""}
+                >
+                  <a
+                    href={`#${item.id}`}
+                    className="text-term-link hover:text-term-accent"
+                  >
+                    {item.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
 
         <div
           className="blog-content"

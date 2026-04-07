@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { profile } from "@/data/profile";
 import Link from "next/link";
+import { ThemeLoader } from "@/components/theme-loader";
 
 export const metadata: Metadata = {
   title: "About — Nguyen Minh An | DevOps Engineer",
@@ -21,6 +22,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-term-bg text-term-fg">
+      <ThemeLoader />
       <div className="mx-auto max-w-3xl px-6 py-10">
         {/* Header */}
         <header className="mb-8">
