@@ -100,7 +100,7 @@ export function TerminalInput({
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
-      className="flex items-center px-4 pb-4 pt-1 shrink-0 cursor-text"
+      className="flex items-center cursor-text"
       onClick={focusInput}
     >
       <span className="text-term-prompt shrink-0">
