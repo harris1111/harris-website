@@ -101,4 +101,5 @@ export function registerAllCommands() {
   require("./download-cv");
   require("./history-cmd");
   require("./filesystem");
+  require("./theme");
 }

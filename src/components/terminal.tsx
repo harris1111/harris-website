@@ -7,6 +7,8 @@ import { useTerminal } from "@/hooks/use-terminal";
 import { useTypewriter } from "@/hooks/use-typewriter";
 import { WELCOME_LINES } from "@/data/ascii-banner";
 import { registerAllCommands } from "@/commands/builtin";
+import { CrtOverlay } from "./crt-overlay";
+import { applyTheme, defaultTheme } from "@/themes/themes";
 
 // Register commands once on module load
 let commandsRegistered = false;
@@ -22,6 +24,14 @@ export function Terminal() {
 
   const terminal = useTerminal();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Load theme from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("harris-cv-theme") || defaultTheme;
+    applyTheme(saved);
+    terminal.setTheme(saved);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onWelcomeComplete = useCallback(() => {
     terminal.setIsReady(true);
@@ -68,9 +78,10 @@ export function Terminal() {
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       ref={containerRef}
-      className="flex flex-col h-dvh bg-term-bg text-term-fg text-sm md:text-base"
+      className="flex flex-col h-dvh bg-term-bg text-term-fg text-sm md:text-base transition-colors duration-300"
       onClick={handleContainerClick}
     >
+      {terminal.theme === "matrix" && <CrtOverlay />}
       {/* Welcome animation (before terminal is ready) */}
       {!isComplete && (
         <div className="flex-1 px-4 pt-4 overflow-hidden">
