@@ -104,4 +104,5 @@ export function registerAllCommands() {
   require("./theme");
   require("./blog");
   require("./guestbook");
+  require("./easter-eggs");
 }
