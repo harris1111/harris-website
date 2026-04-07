@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# harris-website
 
-## Getting Started
+Terminal-style interactive CV for **Nguyen Minh An** — DevOps Engineer.
 
-First, run the development server:
+The entire site is a terminal emulator. Type commands to explore my CV, read blog posts, and sign the guestbook.
+
+## Features
+
+- **Terminal UI**: Full terminal emulator with command history, tab completion, keyboard shortcuts
+- **CV Commands**: `about`, `skills`, `experience`, `education`, `contact`, `social`, `timeline`, `projects`, `certifications`
+- **Virtual Filesystem**: Navigate with `cd`, `ls`, `cat`, `pwd`, `tree`
+- **Blog System**: Markdown blog posts in `content/blog/`, rendered in terminal and as SEO pages
+- **Guestbook**: PostgreSQL-backed guestbook with rate limiting
+- **5 Themes**: dark, light, nord-dark, nord-light, matrix (with CRT effects)
+- **Easter Eggs**: `neofetch`, `cowsay`, `fortune`, `sudo hire-me`
+- **SEO**: JSON-LD, sitemap, robots.txt, OG tags
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) + TypeScript |
+| Styling | Tailwind CSS v4 + CSS variables |
+| Database | PostgreSQL + Prisma 7 |
+| Font | JetBrains Mono |
+| Deploy | Docker + Nginx |
+
+## Quick Start
 
 ```bash
+# Install
+npm install
+
+# Generate Prisma client
+npx prisma generate
+
+# Dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Docker Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd docker
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Set password
+export POSTGRES_PASSWORD=your-secure-password
 
-## Learn More
+# Start all services
+docker compose up -d
 
-To learn more about Next.js, take a look at the following resources:
+# Run database migrations
+docker exec harris-website npx prisma migrate deploy
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Services: Next.js (3000), PostgreSQL (5432), Nginx (80/443).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Adding Blog Posts
 
-## Deploy on Vercel
+Create a `.md` file in `content/blog/`:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```yaml
+---
+title: "Your Post Title"
+date: "2026-04-08"
+tags: ["tag1", "tag2"]
+description: "Brief description"
+published: true
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Your markdown content here...
+```
+
+Rebuild to publish: `npm run build`
+
+## Commands
+
+| Command | Description |
+|---------|------------|
+| `help` | Show all commands |
+| `about` | Profile summary |
+| `skills` | Technical skills |
+| `experience` | Work history |
+| `blog` | List/read blog posts |
+| `guestbook` | Read/sign guestbook |
+| `theme` | Change terminal theme |
+| `neofetch` | System info display |
+| `tree` | Directory tree |
+
+## License
+
+MIT
