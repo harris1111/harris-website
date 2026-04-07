@@ -9,7 +9,7 @@ interface TerminalInputProps {
   onChange: (value: string) => void;
   onSubmit: (value: string) => void;
   onHistoryNav: (direction: "up" | "down") => void;
-  onAutocomplete: (partial: string) => string | null;
+  onAutocomplete: (partial: string, fullInput: string) => string | null;
   onClear: () => void;
 }
 
@@ -63,10 +63,16 @@ export function TerminalInput({
         const words = value.split(" ");
         const lastWord = words[words.length - 1];
         if (lastWord) {
-          const completion = onAutocomplete(lastWord);
+          const completion = onAutocomplete(lastWord, value);
           if (completion) {
-            words[words.length - 1] = completion;
-            onChange(words.join(" ") + (words.length === 1 ? " " : ""));
+            if (words.length === 1) {
+              // Command completion
+              onChange(completion + " ");
+            } else {
+              // Path completion — replace the argument part
+              const cmd = words[0];
+              onChange(`${cmd} ${completion}`);
+            }
           }
         }
         return;

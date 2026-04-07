@@ -100,4 +100,5 @@ export function registerAllCommands() {
   require("./timeline");
   require("./download-cv");
   require("./history-cmd");
+  require("./filesystem");
 }
