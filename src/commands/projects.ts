@@ -1,0 +1,37 @@
+import { register } from "./registry";
+
+register({
+  name: "projects",
+  description: "Display notable projects",
+  usage: "projects",
+  execute: () => ({
+    type: "text",
+    content: [
+      "Notable Projects & Contributions:",
+      "",
+      "  CI/CD Framework (Orochi Network)",
+      "    3-tier centralized CI/CD: 26 composite actions, 12 reusable",
+      "    workflows, templated Dockerfile generator. Serves 17+ repos.",
+      "",
+      "  Centralized Helm Chart System",
+      "    Single Helm chart with 3-tier value hierarchy serving 32+",
+      "    microservices across 4 projects. 42+ ArgoCD applications.",
+      "",
+      "  Proxmox Datacenter",
+      "    Bare-metal server with 28 VMs, K3s HA cluster, automated",
+      "    cloud-init templates, LUKS encryption, Proxmox Backup Server.",
+      "",
+      "  Monitoring Stack",
+      "    Prometheus + Grafana + Loki + Alloy with custom LogQL,",
+      "    S3 archival, alerting. Reduced MTTR by 30%.",
+      "",
+      "  Wireguard VPN Network",
+      "    Hub-and-spoke topology with 11 peers, subnet routing",
+      "    for secure cross-datacenter access.",
+      "",
+      "  Tekton Migration (Smart Loyalty)",
+      "    Jenkins to Tekton on EKS. 30% faster builds, 25% better",
+      "    resource efficiency. Custom solutions for early ecosystem.",
+    ].join("\n"),
+  }),
+});
