@@ -53,8 +53,10 @@ export function useTerminal() {
       const trimmed = input.trim();
       if (!trimmed) return;
 
-      // Add command echo to output
-      appendOutput(createEntry("command", trimmed));
+      // Add command echo to output — stamp cwd at time of entry
+      const cmdEntry = createEntry("command", trimmed);
+      cmdEntry.cwd = stateRef.current.cwd;
+      appendOutput(cmdEntry);
 
       // Add to history
       setHistory((prev) => {

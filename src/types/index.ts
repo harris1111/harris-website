@@ -33,6 +33,8 @@ export interface OutputEntry {
   type: "command" | "output" | "error" | "system";
   content: ReactNode;
   timestamp: number;
+  /** cwd at the time this entry was created (for command prompt display) */
+  cwd?: string;
 }
 
 export interface TerminalState {

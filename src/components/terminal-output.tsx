@@ -2,18 +2,15 @@
 
 import type { OutputEntry } from "@/types";
 
-interface TerminalOutputProps {
-  entries: OutputEntry[];
-  cwd: string;
-}
-
 /** Render a single output entry with appropriate styling */
-function OutputLine({ entry, cwd }: { entry: OutputEntry; cwd: string }) {
+function OutputLine({ entry }: { entry: OutputEntry }) {
   if (entry.type === "command") {
+    // Use the cwd stamped at the time this command was typed
+    const promptCwd = entry.cwd || "~";
     return (
       <div className="flex gap-0">
         <span className="text-term-prompt shrink-0">
-          harris@cv:{cwd}${"\u00A0"}
+          harris@cv:{promptCwd}${"\u00A0"}
         </span>
         <span className="text-term-fg">{entry.content}</span>
       </div>
@@ -38,11 +35,11 @@ function OutputLine({ entry, cwd }: { entry: OutputEntry; cwd: string }) {
   );
 }
 
-export function TerminalOutput({ entries, cwd }: TerminalOutputProps) {
+export function TerminalOutput({ entries }: { entries: OutputEntry[] }) {
   return (
     <>
       {entries.map((entry) => (
-        <OutputLine key={entry.id} entry={entry} cwd={cwd} />
+        <OutputLine key={entry.id} entry={entry} />
       ))}
     </>
   );

@@ -102,7 +102,7 @@ export function Terminal() {
       {/* Output + inline input (flows together like a real terminal) */}
       {isComplete && (
         <>
-          <TerminalOutput entries={terminal.outputs} cwd={terminal.cwd} />
+          <TerminalOutput entries={terminal.outputs} />
           <TerminalInput
             cwd={terminal.cwd}
             value={terminal.inputValue}
