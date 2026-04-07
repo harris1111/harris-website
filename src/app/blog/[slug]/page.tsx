@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPost, getAllSlugs } from "@/lib/blog";
 import type { Metadata } from "next";
+import { BlogContent } from "./blog-content";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -53,13 +54,14 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         </header>
 
-        <div className="prose prose-invert max-w-none leading-relaxed whitespace-pre-wrap text-term-fg">
-          {post.content}
-        </div>
+        <BlogContent content={post.content} />
 
-        <footer className="mt-12 pt-6 border-t border-term-border">
+        <footer className="mt-12 pt-6 border-t border-term-border flex gap-4 text-sm">
           <a href="/" className="text-term-link hover:text-term-accent">
-            ← Back to terminal (type &quot;blog&quot; to see all posts)
+            ← Terminal
+          </a>
+          <a href="/blog" className="text-term-link hover:text-term-accent">
+            ← Blog
           </a>
         </footer>
       </article>
