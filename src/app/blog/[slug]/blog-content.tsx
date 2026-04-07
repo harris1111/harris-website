@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 
 export function BlogContent({ content }: { content: string }) {
   return (
-    <div className="prose prose-invert max-w-none">
+    <div className="max-w-none text-term-fg">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{

@@ -20,7 +20,10 @@
     "react-dom": "19.2.4",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
-    "shiki": "^4.0.2"
+    "remark-html": "^16.0.1",
+    "remark-parse": "^11.0.0",
+    "shiki": "^4.0.2",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

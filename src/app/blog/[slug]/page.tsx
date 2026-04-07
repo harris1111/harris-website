@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getPost, getAllSlugs } from "@/lib/blog";
+import { markdownToHtml } from "@/lib/markdown";
 import type { Metadata } from "next";
-import { BlogContent } from "./blog-content";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -34,6 +34,8 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = getPost(slug);
   if (!post) notFound();
 
+  const htmlContent = await markdownToHtml(post.content);
+
   return (
     <main className="min-h-screen bg-term-bg text-term-fg">
       <article className="mx-auto max-w-3xl px-6 py-12">
@@ -54,7 +56,10 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         </header>
 
-        <BlogContent content={post.content} />
+        <div
+          className="blog-content"
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
+        />
 
         <footer className="mt-12 pt-6 border-t border-term-border flex gap-4 text-sm">
           <a href="/" className="text-term-link hover:text-term-accent">
