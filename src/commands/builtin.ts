@@ -105,4 +105,5 @@ export function registerAllCommands() {
   require("./blog");
   require("./guestbook");
   require("./easter-eggs");
+  require("./open");
 }

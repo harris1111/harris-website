@@ -11,5 +11,6 @@ export const WELCOME_LINES = [
   "DevOps Engineer | Ho Chi Minh City, Vietnam",
   "",
   'Type "help" to see available commands.',
+  'Type "open about" or "open blog" to visit other pages.',
   "",
 ];

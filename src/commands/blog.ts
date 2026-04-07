@@ -35,7 +35,7 @@ register({
       }
     }
 
-    // List all posts
+    // List all posts — one post per block, no fixed-width columns
     try {
       const res = await fetch("/api/blog");
       const posts: BlogPostMeta[] = await res.json();
@@ -44,9 +44,12 @@ register({
         return { type: "text", content: "No blog posts yet." };
       }
 
-      const lines = posts.map(
-        (p) =>
-          `  ${p.date}  ${p.title.padEnd(40)}  [${p.tags.join(", ")}]  ${p.readingTime}m`
+      const lines = posts.map((p) =>
+        [
+          `  ${p.date}  ${p.title}`,
+          `             ${p.tags.map((t) => `#${t}`).join(" ")}  ·  ${p.readingTime} min read`,
+          `             slug: ${p.slug}`,
+        ].join("\n")
       );
 
       return {
@@ -54,12 +57,11 @@ register({
         content: [
           "Blog Posts:",
           "",
-          `  ${"Date".padEnd(12)}${"Title".padEnd(40)}  Tags`,
-          `  ${"─".repeat(10)}  ${"─".repeat(38)}  ${"─".repeat(20)}`,
           ...lines,
           "",
           "Usage: blog <slug> to read a post",
-        ].join("\n"),
+          "Web:   /blog for the full listing",
+        ].join("\n\n"),
       };
     } catch {
       return {
