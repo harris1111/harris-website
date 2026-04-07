@@ -12,6 +12,7 @@ export interface TerminalContext {
   cwd: string;
   theme: string;
   setTheme: (theme: string) => void;
+  setCwd: (cwd: string) => void;
 }
 
 export interface CommandHandler {

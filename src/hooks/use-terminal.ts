@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef } from "react";
 import type { OutputEntry, TerminalContext } from "@/types";
 import { execute, getCompletions } from "@/commands/registry";
+import { getPathCompletions } from "@/data/filesystem";
 
 const MAX_OUTPUTS = 1000;
 const MAX_INPUT_LENGTH = 500;
@@ -68,6 +69,7 @@ export function useTerminal() {
         cwd: stateRef.current.cwd,
         theme: stateRef.current.theme,
         setTheme,
+        setCwd,
       };
 
       // Execute
@@ -114,11 +116,23 @@ export function useTerminal() {
     [history]
   );
 
-  const autocomplete = useCallback((partial: string): string | null => {
-    const completions = getCompletions(partial);
-    if (completions.length === 1) return completions[0];
-    return null;
-  }, []);
+  const autocomplete = useCallback(
+    (partial: string, fullInput: string): string | null => {
+      // If input has a space, try path completion for the argument part
+      const spaceIdx = fullInput.indexOf(" ");
+      if (spaceIdx !== -1) {
+        const pathPart = fullInput.slice(spaceIdx + 1).trimStart();
+        const completions = getPathCompletions(stateRef.current.cwd, pathPart);
+        if (completions.length === 1) return completions[0];
+        return null;
+      }
+      // Otherwise complete command names
+      const completions = getCompletions(partial);
+      if (completions.length === 1) return completions[0];
+      return null;
+    },
+    []
+  );
 
   const handleInputChange = useCallback((value: string) => {
     if (value.length <= MAX_INPUT_LENGTH) {
