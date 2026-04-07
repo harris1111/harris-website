@@ -60,3 +60,13 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--term-muted);
 }
+
+/* Matrix CRT text glow */
+.matrix-theme * {
+  text-shadow: 0 0 3px currentColor;
+}
+
+/* Smooth theme transitions */
+:root {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
