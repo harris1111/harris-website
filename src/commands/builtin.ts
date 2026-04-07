@@ -103,4 +103,5 @@ export function registerAllCommands() {
   require("./filesystem");
   require("./theme");
   require("./blog");
+  require("./guestbook");
 }
