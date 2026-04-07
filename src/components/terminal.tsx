@@ -23,7 +23,8 @@ export function Terminal() {
   ensureCommands();
 
   const terminal = useTerminal();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   // Load theme from localStorage on mount
   useEffect(() => {
@@ -32,6 +33,11 @@ export function Terminal() {
     terminal.setTheme(saved);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Auto-scroll to bottom when output changes
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "instant" });
+  }, [terminal.outputs.length, terminal.isReady]);
 
   const onWelcomeComplete = useCallback(() => {
     terminal.setIsReady(true);
@@ -61,12 +67,10 @@ export function Terminal() {
   // Click anywhere in terminal to focus input
   const handleContainerClick = useCallback(
     (e: React.MouseEvent) => {
-      // Don't steal focus if user is selecting text
       const selection = window.getSelection();
       if (selection && selection.toString().length > 0) return;
 
-      // Focus the input by letting the click propagate to TerminalInput
-      const input = containerRef.current?.querySelector("input");
+      const input = scrollRef.current?.querySelector("input");
       if (input && e.target !== input) {
         input.focus();
       }
@@ -77,24 +81,25 @@ export function Terminal() {
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
-      ref={containerRef}
-      className="flex flex-col h-dvh bg-term-bg text-term-fg text-sm md:text-base transition-colors duration-300"
+      ref={scrollRef}
+      className="h-dvh overflow-y-auto bg-term-bg text-term-fg text-sm md:text-base transition-colors duration-300 px-4 pt-4 pb-2"
       onClick={handleContainerClick}
     >
       {terminal.theme === "matrix" && <CrtOverlay />}
-      {/* Welcome animation (before terminal is ready) */}
+
+      {/* Welcome animation */}
       {!isComplete && (
-        <div className="flex-1 px-4 pt-4 overflow-hidden">
+        <>
           {displayedLines.map((line, i) => (
             <div key={i} className="whitespace-pre-wrap text-term-accent">
               {line}
             </div>
           ))}
           <span className="inline-block w-2 h-4 bg-term-accent animate-pulse" />
-        </div>
+        </>
       )}
 
-      {/* Terminal output + input (after welcome completes) */}
+      {/* Output + inline input (flows together like a real terminal) */}
       {isComplete && (
         <>
           <TerminalOutput entries={terminal.outputs} cwd={terminal.cwd} />
@@ -108,6 +113,7 @@ export function Terminal() {
             onAutocomplete={terminal.autocomplete}
             onClear={terminal.clearTerminal}
           />
+          <div ref={bottomRef} />
         </>
       )}
     </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import type { OutputEntry } from "@/types";
 
 interface TerminalOutputProps {
@@ -40,19 +39,11 @@ function OutputLine({ entry, cwd }: { entry: OutputEntry; cwd: string }) {
 }
 
 export function TerminalOutput({ entries, cwd }: TerminalOutputProps) {
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll to bottom on new output
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "instant" });
-  }, [entries.length]);
-
   return (
-    <div className="flex-1 overflow-y-auto px-4 pt-4 pb-2">
+    <>
       {entries.map((entry) => (
         <OutputLine key={entry.id} entry={entry} cwd={cwd} />
       ))}
-      <div ref={bottomRef} />
-    </div>
+    </>
   );
 }
