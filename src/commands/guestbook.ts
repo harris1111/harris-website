@@ -1,20 +1,14 @@
-import { register, parse } from "./registry";
+import { register } from "./registry";
 
 register({
   name: "guestbook",
   description: "Read or sign the guestbook",
-  usage: 'guestbook [--write "message" --name "name"]',
-  execute: async (args) => {
-    const parsed = parse(["guestbook", ...args].join(" "));
-
+  usage: 'guestbook [--write "message" --name "name"] [--page N]',
+  execute: async (_args, _ctx, flags) => {
     // Write mode
-    if (parsed.flags.write) {
-      const message =
-        typeof parsed.flags.write === "string" ? parsed.flags.write : "";
-      const name =
-        typeof parsed.flags.name === "string"
-          ? parsed.flags.name
-          : "Anonymous";
+    if (flags.write) {
+      const message = typeof flags.write === "string" ? flags.write : "";
+      const name = typeof flags.name === "string" ? flags.name : "Anonymous";
 
       if (!message) {
         return {
@@ -46,7 +40,7 @@ register({
 
     // Read mode
     try {
-      const page = typeof parsed.flags.page === "string" ? parsed.flags.page : "1";
+      const page = typeof flags.page === "string" ? flags.page : "1";
       const res = await fetch(`/api/guestbook?page=${page}`);
 
       if (!res.ok) {

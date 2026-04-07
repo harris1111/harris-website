@@ -87,7 +87,7 @@ export async function execute(
     };
   }
 
-  return handler.execute(parsed.args, ctx);
+  return handler.execute(parsed.args, ctx, parsed.flags);
 }
 
 /** Get command name completions for tab */
