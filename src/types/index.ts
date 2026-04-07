@@ -24,13 +24,31 @@ export interface CommandHandler {
   ) => CommandOutput | Promise<CommandOutput>;
 }
 
-/* === History entry stored in terminal output === */
+/* === Terminal output entries rendered in scrollback === */
 
-export interface HistoryEntry {
-  id: number;
-  command: string;
-  output: CommandOutput;
+export interface OutputEntry {
+  id: string;
+  type: "command" | "output" | "error" | "system";
+  content: ReactNode;
+  timestamp: number;
+}
+
+export interface TerminalState {
+  outputs: OutputEntry[];
+  history: string[];
+  historyIndex: number;
   cwd: string;
+  inputValue: string;
+  isTyping: boolean;
+}
+
+/* === Parsed command from user input === */
+
+export interface ParsedCommand {
+  command: string;
+  args: string[];
+  flags: Record<string, string | boolean>;
+  raw: string;
 }
 
 /* === Theming === */
