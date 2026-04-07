@@ -102,4 +102,5 @@ export function registerAllCommands() {
   require("./history-cmd");
   require("./filesystem");
   require("./theme");
+  require("./blog");
 }
