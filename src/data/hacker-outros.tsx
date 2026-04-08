@@ -21,7 +21,7 @@ export function successOutros(t: string): (() => HackerLine[])[] {
       { text: <>{c("root", "text-term-error")}@{c(t, "text-term-prompt")}:~# {c("psql -U admin -d harris_cv", "text-term-warning")}</>, delay: 400 },
       { text: <>harris_cv=# {c("SELECT * FROM skills LIMIT 5;", "text-term-warning")}</>, delay: 300 },
       { text: <> {c("category", "text-term-accent")}        | {c("technologies", "text-term-accent")}</>, delay: 150 },
-      { text: ` ────────────────┼──────────────────────────────────`, delay: 100, color: "text-term-muted" },
+      { text: ` ----------------+----------------------------------`, delay: 100, color: "text-term-muted" },
       { text: <> Cloud & Infra   | {c("Kubernetes, Docker, GCP, AWS", "text-term-prompt")}</>, delay: 150 },
       { text: <> CI/CD           | {c("GitHub Actions, ArgoCD, Jenkins", "text-term-prompt")}</>, delay: 150 },
       { text: <> IaC             | {c("Terraform, Helm, Ansible", "text-term-prompt")}</>, delay: 150 },
@@ -76,7 +76,7 @@ export function successOutros(t: string): (() => HackerLine[])[] {
     () => [
       { text: <>{c("root", "text-term-error")}@{c(t, "text-term-prompt")}:~# {c("vault kv get secret/harris/contact", "text-term-warning")}</>, delay: 400 },
       { text: <>{c("Key", "text-term-accent")}         {c("Value", "text-term-accent")}</>, delay: 150 },
-      { text: `───         ─────`, delay: 100, color: "text-term-muted" },
+      { text: `---         -----`, delay: 100, color: "text-term-muted" },
       { text: <>{c("email", "text-term-prompt")}       {c("[REDACTED]", "text-term-error")}</>, delay: 150 },
       { text: <>{c("phone", "text-term-prompt")}       {c("[REDACTED]", "text-term-error")}</>, delay: 150 },
       { text: <>{c("linkedin", "text-term-prompt")}    {c(profile.social.find(s => s.platform === "LinkedIn")?.url || "", "text-term-link")}</>, delay: 150 },
