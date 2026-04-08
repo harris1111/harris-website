@@ -109,9 +109,9 @@ register({
             <div>{""}</div>
             <div>{c("Available sudo commands:", "text-term-accent")}</div>
             <div>  {c("sudo <cmd>", "text-term-warning")}        Run a command as root</div>
-            <div>  {c("sudo ████-me", "text-term-muted")}      {c("[CLASSIFIED]", "text-term-error")} — clearance level 5 required</div>
+            <div>  {c("sudo ████-me", "text-term-muted")}      {c("[CLASSIFIED]", "text-term-error")} — requires root access</div>
             <div>{""}</div>
-            <div className="text-term-muted">You've seen the CV. Impressed? Complete the command.</div>
+            <div className="text-term-muted">Looks familiar? You might have seen this in a script somewhere...</div>
           </div>
         ),
       };

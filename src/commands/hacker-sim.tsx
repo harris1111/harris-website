@@ -225,6 +225,13 @@ register({
         { text: `══════════════════════════════════════════════`, delay: 200, color: "text-term-accent" },
         { text: "", delay: 300 },
         ...outro,
+        { text: "", delay: 300 },
+        { text: <>{c("root", "text-term-error")}@{c(target, "text-term-prompt")}:~# {c("find / -name '*.sh' -perm -u+x 2>/dev/null", "text-term-warning")}</>, delay: 600 },
+        { text: <>{c("/root/hire-me.sh", "text-term-accent")}</>, delay: 400 },
+        { text: <>{c("root", "text-term-error")}@{c(target, "text-term-prompt")}:~# {c("cat /root/hire-me.sh", "text-term-warning")}</>, delay: 500 },
+        { text: <>{c("#!/bin/bash", "text-term-muted")}</>, delay: 150 },
+        { text: <>{c("# Only the worthy shall execute this", "text-term-muted")}</>, delay: 150 },
+        { text: <>{c("echo", "text-term-prompt")} {c('"You found the script. Now run: sudo hire-me"', "text-term-accent")}</>, delay: 300 },
         { text: "", delay: 0 },
       );
     } else {
@@ -238,6 +245,9 @@ register({
         { text: `══════════════════════════════════════════`, delay: 200, color: "text-term-muted" },
         { text: "", delay: 300 },
         ...outro,
+        { text: "", delay: 300 },
+        { text: <>{c("[*]", "text-term-accent")} Attack failed, but the firewall leaked something...</>, delay: 400 },
+        { text: <>{c("[*]", "text-term-accent")} Intercepted banner: {c('"Run sudo hire-me for a surprise"', "text-term-warning")}</>, delay: 500 },
         { text: "", delay: 0 },
       );
     }
