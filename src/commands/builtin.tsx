@@ -1,4 +1,5 @@
 import { register, getAllCommands } from "./registry";
+import { c } from "./format-helpers";
 
 /** Register built-in commands: help, clear, whoami, echo, man */
 export function registerBuiltins() {
@@ -10,28 +11,36 @@ export function registerBuiltins() {
       const cmds = getAllCommands();
 
       if (args[0]) {
-        const target = cmds.find((c) => c.name === args[0].toLowerCase());
+        const target = cmds.find((cmd) => cmd.name === args[0].toLowerCase());
         if (!target) {
           return { type: "error", content: `Unknown command: ${args[0]}` };
         }
         return {
-          type: "text",
-          content: `${target.name} — ${target.description}${target.usage ? `\nUsage: ${target.usage}` : ""}`,
+          type: "jsx",
+          content: (
+            <div className="whitespace-pre-wrap font-mono">
+              <div>{c(target.name, "text-term-accent")} — {target.description}</div>
+              {target.usage && <div>Usage: {c(target.usage, "text-term-prompt")}</div>}
+            </div>
+          ),
         };
       }
 
-      const lines = cmds.map(
-        (c) => `  ${c.name.padEnd(16)} ${c.description}`
-      );
       return {
-        type: "text",
-        content: [
-          "Available commands:",
-          "",
-          ...lines,
-          "",
-          "Tip: <command> --help for details",
-        ].join("\n"),
+        type: "jsx",
+        content: (
+          <div className="whitespace-pre-wrap font-mono">
+            <div>{c("Available commands:", "text-term-accent")}</div>
+            <div>{""}</div>
+            {cmds.map((cmd) => (
+              <div key={cmd.name}>
+                {"  "}{c(cmd.name.padEnd(16), "text-term-prompt")} {cmd.description}
+              </div>
+            ))}
+            <div>{""}</div>
+            <div className="text-term-muted">Tip: {c("<command> --help", "text-term-warning")} for details</div>
+          </div>
+        ),
       };
     },
   });
@@ -45,19 +54,21 @@ export function registerBuiltins() {
         return { type: "error", content: "Usage: man <command>" };
       }
       const cmds = getAllCommands();
-      const target = cmds.find((c) => c.name === args[0].toLowerCase());
+      const target = cmds.find((cmd) => cmd.name === args[0].toLowerCase());
       if (!target) {
         return { type: "error", content: `No manual entry for ${args[0]}` };
       }
       return {
-        type: "text",
-        content: [
-          `NAME`,
-          `    ${target.name} — ${target.description}`,
-          "",
-          `SYNOPSIS`,
-          `    ${target.usage || target.name}`,
-        ].join("\n"),
+        type: "jsx",
+        content: (
+          <div className="whitespace-pre-wrap font-mono">
+            <div>{c("NAME", "text-term-accent")}</div>
+            <div>    {c(target.name, "text-term-prompt")} — {target.description}</div>
+            <div>{""}</div>
+            <div>{c("SYNOPSIS", "text-term-accent")}</div>
+            <div>    {c(target.usage || target.name, "text-term-warning")}</div>
+          </div>
+        ),
       };
     },
   });
@@ -71,7 +82,10 @@ export function registerBuiltins() {
   register({
     name: "whoami",
     description: "Display current user",
-    execute: () => ({ type: "text", content: "harris" }),
+    execute: () => ({
+      type: "jsx",
+      content: <div>{c("harris", "text-term-prompt")}</div>,
+    }),
   });
 
   register({

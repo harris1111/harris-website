@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 
 export interface HackerLine {
-  text: string;
+  /** Line content — string or JSX with inline color spans */
+  text: ReactNode;
   /** Delay in ms before showing this line (default: 80) */
   delay?: number;
-  /** CSS color class (e.g. "text-term-accent", "text-term-error") */
+  /** Base CSS color class for the whole line (default: "text-term-fg") */
   color?: string;
 }
 

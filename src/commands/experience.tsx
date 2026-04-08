@@ -1,4 +1,5 @@
 import { register } from "./registry";
+import { c } from "./format-helpers";
 import { profile } from "@/data/profile";
 
 register({
@@ -22,16 +23,20 @@ register({
       }
     }
 
-    const sections = entries.map((exp) => {
-      const bullets = exp.bullets.map((b) => `  • ${b}`).join("\n");
-      return [
-        `${exp.company} — ${exp.role}`,
-        `${exp.period} | ${exp.location}`,
-        "",
-        bullets,
-      ].join("\n");
-    });
+    const sections = entries.map((exp, i) => (
+      <div key={i} className={i > 0 ? "mt-2" : ""}>
+        <div>{c(exp.company, "text-term-accent")} — {c(exp.role, "text-term-prompt")}</div>
+        <div>{c(exp.period, "text-term-warning")} | {c(exp.location, "text-term-muted")}</div>
+        <div>{""}</div>
+        {exp.bullets.map((b, j) => (
+          <div key={j}>  {c("•", "text-term-muted")} {b}</div>
+        ))}
+      </div>
+    ));
 
-    return { type: "text", content: sections.join("\n\n") };
+    return {
+      type: "jsx",
+      content: <div className="whitespace-pre-wrap font-mono">{sections}</div>,
+    };
   },
 });

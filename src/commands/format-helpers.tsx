@@ -1,5 +1,10 @@
 import React from "react";
 
+/** Inline color helper — wraps text in a themed span */
+export function c(text: string, color: string) {
+  return <span className={color}>{text}</span>;
+}
+
 /** Colored section header */
 export function Header({ children }: { children: React.ReactNode }) {
   return (
