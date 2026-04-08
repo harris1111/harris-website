@@ -339,6 +339,209 @@ function successScenarios(target: string): (() => HackerLine[])[] {
   ];
 }
 
+/** Success outros — hacker broke in and is exploring the system */
+function successOutros(target: string): (() => HackerLine[])[] {
+  return [
+    () => [
+      { text: `root@${target}:~# cat /etc/passwd`, delay: 400 },
+      { text: `root:x:0:0:root:/root:/bin/bash`, delay: 100 },
+      { text: `harris:x:1000:1000:DevOps Engineer,Kubernetes,GCP,AWS:/home/harris:/bin/zsh`, delay: 150, color: "text-term-prompt" },
+      { text: `root@${target}:~# ls -la /home/harris/`, delay: 400 },
+      { text: `drwxr-x--- harris harris 4096 experience/`, delay: 100 },
+      { text: `drwxr-x--- harris harris 4096 skills/`, delay: 100 },
+      { text: `drwxr-x--- harris harris 4096 projects/`, delay: 100 },
+      { text: `-rw-r----- harris harris  512 resume.pdf`, delay: 100 },
+      { text: `[*] Interesting target... run 'skills' or 'experience' to exfiltrate`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `root@${target}:~# psql -U admin -d harris_cv`, delay: 400 },
+      { text: `harris_cv=# SELECT * FROM skills LIMIT 5;`, delay: 300 },
+      { text: ` category        | technologies`, delay: 150, color: "text-term-accent" },
+      { text: ` ────────────────┼──────────────────────────────────`, delay: 100 },
+      { text: ` Cloud & Infra   | Kubernetes, Docker, GCP, AWS`, delay: 150, color: "text-term-prompt" },
+      { text: ` CI/CD           | GitHub Actions, ArgoCD, Jenkins`, delay: 150, color: "text-term-prompt" },
+      { text: ` IaC             | Terraform, Helm, Ansible`, delay: 150, color: "text-term-prompt" },
+      { text: `(${rand(6, 10)} rows)`, delay: 100 },
+      { text: `[*] Full dump available — run 'skills' to see all categories`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `root@${target}:~# find / -name "*.key" -o -name "*.pem" 2>/dev/null`, delay: 500 },
+      { text: `/etc/ssl/private/harris-cv.key`, delay: 150 },
+      { text: `/home/harris/.ssh/id_ed25519`, delay: 150 },
+      { text: `root@${target}:~# cat /home/harris/.profile`, delay: 400 },
+      { text: `# Harris Nguyen — DevOps & Cloud Infrastructure`, delay: 200, color: "text-term-prompt" },
+      { text: `# 2.5+ years | K8s specialist | Certified on GCP`, delay: 200, color: "text-term-prompt" },
+      { text: `export ROLE="DevOps Engineer"`, delay: 150 },
+      { text: `export STACK="k8s,docker,terraform,gcp,aws"`, delay: 150 },
+      { text: `[*] Run 'about' to see the full dossier on this operator`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `root@${target}:~# docker ps`, delay: 400 },
+      { text: `CONTAINER ID  IMAGE              STATUS       PORTS`, delay: 150, color: "text-term-accent" },
+      { text: `a1b2c3d4e5f6  harris-website     Up 99 days   0.0.0.0:443->443`, delay: 150 },
+      { text: `f6e5d4c3b2a1  postgres:16        Up 99 days   5432/tcp`, delay: 150 },
+      { text: `root@${target}:~# docker logs harris-website --tail 3`, delay: 400 },
+      { text: `[info] Serving Next.js 16 on port 3000`, delay: 150 },
+      { text: `[info] Uptime: 99.95% — zero unplanned restarts`, delay: 150, color: "text-term-prompt" },
+      { text: `[*] Solid infrastructure. Run 'projects' to see what else he built`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `root@${target}:~# crontab -l`, delay: 400 },
+      { text: `# Automated by Harris — zero-touch operations`, delay: 200, color: "text-term-muted" },
+      { text: `0 */6 * * * /opt/backup/pg-dump.sh`, delay: 150 },
+      { text: `*/5 * * * * /opt/monitoring/health-check.sh`, delay: 150 },
+      { text: `0 3 * * 0 /opt/security/cve-scan.sh`, delay: 150 },
+      { text: `root@${target}:~# cat /var/log/auth.log | tail -1`, delay: 400 },
+      { text: `Intrusion detected from ${randIp()} — incident auto-mitigated`, delay: 300, color: "text-term-warning" },
+      { text: `[*] Even the cron jobs are hardened. Run 'certifications' to see why`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `root@${target}:~# cat /opt/k8s/cluster-info.yaml`, delay: 400 },
+      { text: `cluster: production`, delay: 150 },
+      { text: `nodes: ${rand(3, 12)}`, delay: 150 },
+      { text: `pods: ${rand(40, 200)} running`, delay: 150 },
+      { text: `uptime: ${rand(90, 365)} days`, delay: 150 },
+      { text: `managed_by: harris`, delay: 150, color: "text-term-prompt" },
+      { text: `root@${target}:~# kubectl get deployments --no-headers | wc -l`, delay: 400 },
+      { text: `${rand(8, 25)}`, delay: 200 },
+      { text: `[*] Production-grade K8s cluster. Run 'experience' for the full story`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `root@${target}:~# git log --oneline -5 /home/harris/projects/`, delay: 400 },
+      { text: `${randHex(7)} feat: zero-downtime blue-green deployment pipeline`, delay: 150 },
+      { text: `${randHex(7)} fix: auto-scaling policy for peak traffic`, delay: 150 },
+      { text: `${randHex(7)} feat: multi-region failover with < 30s RTO`, delay: 150 },
+      { text: `${randHex(7)} refactor: Helm charts for microservice fleet`, delay: 150 },
+      { text: `${randHex(7)} feat: GitOps workflow with ArgoCD + Terraform`, delay: 150 },
+      { text: `[*] Commits speak for themselves. Run 'projects' for details`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `root@${target}:~# cat /root/.bash_history | grep -i secret`, delay: 500 },
+      { text: `vault kv get secret/harris/contact`, delay: 200 },
+      { text: `root@${target}:~# vault kv get secret/harris/contact`, delay: 400 },
+      { text: `Key         Value`, delay: 150, color: "text-term-accent" },
+      { text: `───         ─────`, delay: 100 },
+      { text: `email       minhan112001@gmail.com`, delay: 150, color: "text-term-prompt" },
+      { text: `phone       +84 347802611`, delay: 150, color: "text-term-prompt" },
+      { text: `linkedin    /in/minh-an-nguyen`, delay: 150, color: "text-term-prompt" },
+      { text: `[*] Target acquired. Run 'contact' or 'social' to connect`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `root@${target}:~# ls /etc/ssl/certs/ | head -3`, delay: 400 },
+      { text: `gcp-professional-cloud-architect.pem`, delay: 150, color: "text-term-prompt" },
+      { text: `aws-solutions-architect.pem`, delay: 150, color: "text-term-prompt" },
+      { text: `cka-kubernetes-admin.pem`, delay: 150, color: "text-term-prompt" },
+      { text: `root@${target}:~# openssl x509 -in gcp-*.pem -subject -noout`, delay: 400 },
+      { text: `subject=CN = Harris Nguyen/O = Google Cloud/OU = Professional`, delay: 200 },
+      { text: `[*] Certified and dangerous. Run 'certifications' to verify`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `root@${target}:~# cat /proc/version`, delay: 300 },
+      { text: `Linux version 6.5.0-harris (gcc 13.2.0) #1 SMP PREEMPT_DYNAMIC`, delay: 200 },
+      { text: `root@${target}:~# uptime`, delay: 300 },
+      { text: ` 10:${rand(10, 59)}:${rand(10, 59)} up ${rand(90, 365)} days, load average: 0.${rand(1, 3)}${rand(0, 9)}, 0.${rand(1, 2)}${rand(0, 9)}, 0.${rand(0, 1)}${rand(0, 9)}`, delay: 200 },
+      { text: `root@${target}:~# cat /etc/motd`, delay: 400 },
+      { text: `╔══════════════════════════════════════════════╗`, delay: 100 },
+      { text: `║  Maintained by Harris — DevOps Engineer      ║`, delay: 150, color: "text-term-prompt" },
+      { text: `║  "Infrastructure as code, reliability as SLA"║`, delay: 150, color: "text-term-prompt" },
+      { text: `╚══════════════════════════════════════════════╝`, delay: 100 },
+      { text: `[*] Run 'about' for the full operator profile`, delay: 400, color: "text-term-accent" },
+    ],
+  ];
+}
+
+/** Fail outros — attack was blocked, system taunts the attacker with intel */
+function failOutros(target: string): (() => HackerLine[])[] {
+  return [
+    () => [
+      { text: `[IDS] Alert: Intrusion attempt from ${randIp()} logged`, delay: 300, color: "text-term-warning" },
+      { text: `[IDS] Attacker fingerprint stored in /var/log/honeypot`, delay: 250, color: "text-term-warning" },
+      { text: `[IDS] Auto-response: Deploying counter-recon...`, delay: 400 },
+      { text: `[IDS] Sysadmin profile: Harris Nguyen, DevOps Engineer`, delay: 300, color: "text-term-prompt" },
+      { text: `[IDS] Stack: Kubernetes, Terraform, GCP, AWS, Docker`, delay: 250, color: "text-term-prompt" },
+      { text: `[IDS] Recommendation: Don't hack. Hire. Run 'skills' for proof`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `[HONEYPOT] Connection trapped at ${randIp()}:${rand(4000, 9000)}`, delay: 300, color: "text-term-warning" },
+      { text: `[HONEYPOT] Collecting attacker metadata...`, delay: 400 },
+      { text: `[HONEYPOT] Serving fake /etc/passwd...`, delay: 300 },
+      { text: `root:x:0:0:You thought:/root:/bin/nope`, delay: 200, color: "text-term-muted" },
+      { text: `harris:x:1000:1000:The guy who set this trap:/home/harris:/bin/zsh`, delay: 200, color: "text-term-prompt" },
+      { text: `[HONEYPOT] Run 'experience' to see who you're up against`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `[FIREWALL] Source IP ${randIp()} added to blacklist`, delay: 300, color: "text-term-warning" },
+      { text: `[FIREWALL] Rule #${rand(100, 999)}: DROP all from attacker`, delay: 250, color: "text-term-warning" },
+      { text: `[FIREWALL] Incident report auto-filed to /var/log/incidents/`, delay: 300 },
+      { text: `[FIREWALL] This infrastructure is managed by:`, delay: 300 },
+      { text: `   Harris Nguyen — 2.5+ years DevOps, K8s specialist`, delay: 250, color: "text-term-prompt" },
+      { text: `   Certified: GCP Professional Cloud Architect`, delay: 250, color: "text-term-prompt" },
+      { text: `[FIREWALL] Run 'certifications' to see the full arsenal`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `[WAZUH] MITRE ATT&CK techniques detected:`, delay: 300, color: "text-term-warning" },
+      { text: `   T1190 — Exploit Public-Facing Application`, delay: 150 },
+      { text: `   T1110 — Brute Force`, delay: 150 },
+      { text: `   T1083 — File and Directory Discovery`, delay: 150 },
+      { text: `[WAZUH] All techniques mitigated. Threat level: NEUTRALIZED`, delay: 400, color: "text-term-prompt" },
+      { text: `[WAZUH] Defender: harris (DevOps/SecOps)`, delay: 250 },
+      { text: `[WAZUH] Run 'about' to review the defender's full profile`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `[CROWDSEC] Threat intelligence match — known attack pattern`, delay: 300, color: "text-term-warning" },
+      { text: `[CROWDSEC] Community blocklist updated (+1 IP)`, delay: 250, color: "text-term-warning" },
+      { text: `[CROWDSEC] Decision: ban ${randIp()} for 24h`, delay: 300 },
+      { text: `[CROWDSEC] Server hardened by: Harris Nguyen`, delay: 250 },
+      { text: `[CROWDSEC] Specialties: Container security, GitOps, CI/CD`, delay: 250, color: "text-term-prompt" },
+      { text: `[CROWDSEC] Run 'projects' to see his production deployments`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `[FAIL2BAN] Jail: sshd — Ban ${randIp()}`, delay: 300, color: "text-term-warning" },
+      { text: `[FAIL2BAN] Jail: nginx-http-auth — Ban ${randIp()}`, delay: 250, color: "text-term-warning" },
+      { text: `[FAIL2BAN] Total active bans: ${rand(15, 150)}`, delay: 300 },
+      { text: `[SSHD] Banner message to attacker:`, delay: 300 },
+      { text: `   "This machine is monitored 24/7 by a DevOps engineer"`, delay: 250 },
+      { text: `   "who automates everything — including your ban."`, delay: 250, color: "text-term-prompt" },
+      { text: `[*] Run 'timeline' to see his career in action`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `[AUDITD] Suspicious syscalls logged to /var/log/audit.log`, delay: 300, color: "text-term-warning" },
+      { text: `[AUDITD] type=ALERT msg=audit(${Date.now()}): exploit_attempt=true`, delay: 250 },
+      { text: `[OSSEC] Rootcheck: System integrity verified — 0 changes`, delay: 300, color: "text-term-prompt" },
+      { text: `[OSSEC] Syscheck: All ${rand(500, 2000)} monitored files intact`, delay: 250, color: "text-term-prompt" },
+      { text: `[OSSEC] This system withstands attacks because of its admin`, delay: 300 },
+      { text: `[*] Run 'experience' to understand why nothing got through`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `[NGINX] 403 Forbidden — attack payload rejected`, delay: 300, color: "text-term-warning" },
+      { text: `[NGINX] ModSecurity: ${rand(3, 8)} rules triggered`, delay: 250 },
+      { text: `[NGINX] Rate limit: ${rand(10, 50)} requests blocked in last 60s`, delay: 250 },
+      { text: `[NGINX] Custom error page served:`, delay: 300 },
+      { text: `   ┌─────────────────────────────────────────┐`, delay: 100 },
+      { text: `   │  403: Nice try.                         │`, delay: 150 },
+      { text: `   │  This server runs on pure DevOps skill. │`, delay: 150, color: "text-term-prompt" },
+      { text: `   │  Run 'skills' to see the full stack.    │`, delay: 150, color: "text-term-prompt" },
+      { text: `   └─────────────────────────────────────────┘`, delay: 100 },
+    ],
+    () => [
+      { text: `[SIEM] Correlation alert: Multi-vector attack detected`, delay: 300, color: "text-term-warning" },
+      { text: `[SIEM] Severity: HIGH — Automated containment activated`, delay: 300, color: "text-term-warning" },
+      { text: `[SIEM] Network segment isolated in ${rand(50, 500)}ms`, delay: 250 },
+      { text: `[SIEM] Forensics snapshot saved to /var/forensics/`, delay: 250 },
+      { text: `[SIEM] Incident responder: Harris Nguyen (on-call)`, delay: 300, color: "text-term-prompt" },
+      { text: `[SIEM] Response time SLA: < 5min. Run 'contact' to reach him`, delay: 400, color: "text-term-accent" },
+    ],
+    () => [
+      { text: `[IPTABLES] Chain INPUT (policy DROP)`, delay: 300, color: "text-term-warning" },
+      { text: `[IPTABLES] ${rand(20, 80)} rules active — zero-trust architecture`, delay: 250 },
+      { text: `[IPTABLES] Geo-block: ${rand(5, 15)} countries filtered`, delay: 250 },
+      { text: `[IPTABLES] Port knocking: enabled (good luck guessing)`, delay: 250, color: "text-term-prompt" },
+      { text: `[KERNEL] Attacker connection terminated by OOM killer`, delay: 300, color: "text-term-error" },
+      { text: `[*] Infrastructure built to survive. Run 'projects' for portfolio`, delay: 400, color: "text-term-accent" },
+    ],
+  ];
+}
+
 /* ── nmap ── */
 
 register({
@@ -553,8 +756,9 @@ register({
     ];
 
     if (isOddMinute) {
-      // Success path
+      // Success path — hacker broke in, finds CV data
       const exploit = pick(successScenarios(target))();
+      const outro = pick(successOutros(target))();
       lines.push(
         ...exploit,
         { text: "", delay: 300 },
@@ -562,26 +766,21 @@ register({
         { text: `  ACCESS GRANTED — root shell obtained`, delay: 400, color: "text-term-prompt" },
         { text: `══════════════════════════════════════════════`, delay: 200, color: "text-term-prompt" },
         { text: "", delay: 300 },
-        { text: `root@${target}:~# cat /root/flag.txt`, delay: 500 },
-        { text: "", delay: 400 },
-        { text: `  "Just kidding. This is a simulated terminal."`, delay: 300, color: "text-term-accent" },
-        { text: `  "But the skills on this CV are very real."`, delay: 300, color: "text-term-accent" },
-        { text: `  "Type 'experience' or 'skills' to see for yourself."`, delay: 400, color: "text-term-prompt" },
+        ...outro,
         { text: "", delay: 0 },
       );
     } else {
-      // Fail path
+      // Fail path — blocked, but IDS/honeypot reveals CV intel
       const fail = pick(failScenarios(target))();
+      const outro = pick(failOutros(target))();
       lines.push(
         ...fail,
         { text: "", delay: 300 },
         { text: `══════════════════════════════════════════`, delay: 300, color: "text-term-accent" },
         { text: `  ACCESS DENIED — System is well-secured`, delay: 400, color: "text-term-error" },
         { text: `══════════════════════════════════════════`, delay: 200, color: "text-term-accent" },
-        { text: "", delay: 200 },
-        { text: `[!] This system is maintained by a DevOps engineer`, delay: 300 },
-        { text: `[!] who actually knows what they're doing.`, delay: 300 },
-        { text: `[!] Try 'sudo hire-me' instead ;)`, delay: 400, color: "text-term-prompt" },
+        { text: "", delay: 300 },
+        ...outro,
         { text: "", delay: 0 },
       );
     }
