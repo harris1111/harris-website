@@ -4,7 +4,7 @@ import { useEffect, useCallback, useRef } from "react";
 import { TerminalOutput } from "./terminal-output";
 import { TerminalInput } from "./terminal-input";
 import { useTerminal } from "@/hooks/use-terminal";
-import { useTypewriter } from "@/hooks/use-typewriter";
+import { useTextScramble } from "@/hooks/use-text-scramble";
 import { WELCOME_LINES, SECRET_HINT } from "@/data/ascii-banner";
 import { registerAllCommands } from "@/commands/builtin";
 import { CrtOverlay } from "./crt-overlay";
@@ -18,6 +18,12 @@ function ensureCommands() {
     commandsRegistered = true;
   }
 }
+
+/** All welcome lines combined for the scramble animation */
+const ALL_WELCOME = [...WELCOME_LINES, ...SECRET_HINT, ""];
+
+/** Index where secret hint lines start (for color split) */
+const HINT_START = WELCOME_LINES.length;
 
 export function Terminal() {
   ensureCommands();
@@ -44,26 +50,13 @@ export function Terminal() {
     terminal.setIsReady(true);
   }, [terminal]);
 
-  const { displayedLines, isComplete, skip } = useTypewriter({
-    lines: [...WELCOME_LINES, ...SECRET_HINT, ""],
-    speed: 30,
-    lineDelay: 200,
+  // Hacker-style text scramble — all lines appear at once, chars resolve in ~3s
+  const { displayedLines, isComplete } = useTextScramble({
+    lines: ALL_WELCOME,
+    duration: 3000,
+    startDelay: 300,
     onComplete: onWelcomeComplete,
   });
-
-  // Skip welcome animation on any keypress or click
-  useEffect(() => {
-    if (isComplete) return;
-
-    const handleSkip = () => skip();
-    window.addEventListener("keydown", handleSkip, { once: true });
-    window.addEventListener("click", handleSkip, { once: true });
-
-    return () => {
-      window.removeEventListener("keydown", handleSkip);
-      window.removeEventListener("click", handleSkip);
-    };
-  }, [isComplete, skip]);
 
   // Click anywhere in terminal to focus input
   const handleContainerClick = useCallback(
@@ -89,15 +82,17 @@ export function Terminal() {
       {terminal.theme === "matrix" && <CrtOverlay variant="matrix" />}
       {terminal.theme === "hacker" && <CrtOverlay variant="hacker" />}
 
-      {/* Welcome banner — animates on first load, stays permanently */}
+      {/* Welcome banner — scramble animation then static */}
       {!isComplete ? (
         <>
           {displayedLines.map((line, i) => (
-            <div key={i} className="whitespace-pre-wrap text-term-accent">
+            <div
+              key={i}
+              className={`whitespace-pre-wrap ${i >= HINT_START ? "text-term-warning" : "text-term-accent"}`}
+            >
               {line}
             </div>
           ))}
-          <span className="inline-block w-2 h-4 bg-term-accent animate-pulse" />
         </>
       ) : (
         <>
