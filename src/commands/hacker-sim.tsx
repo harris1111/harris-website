@@ -193,8 +193,23 @@ register({
   description: "Launch attack on target",
   usage: "hack <target>",
   execute: (args) => {
-    const target = args[0] || SITE_HOST;
+    // No args → require a target
+    if (!args[0]) {
+      return {
+        type: "jsx",
+        content: (
+          <div className="whitespace-pre-wrap font-mono">
+            <div>{c("Usage:", "text-term-warning")} hack {c("<target>", "text-term-muted")}</div>
+            <div>{""}</div>
+            <div>Example: hack {c(SITE_HOST, "text-term-link")}</div>
+          </div>
+        ),
+      };
+    }
+
+    const target = args[0];
     const ip = randIp();
+    const isOwnServer = target.toLowerCase() === SITE_HOST.toLowerCase();
     const isOddMinute = new Date().getMinutes() % 2 !== 0;
 
     const recon = pick(reconScenarios(target))();
@@ -225,15 +240,28 @@ register({
         { text: `══════════════════════════════════════════════`, delay: 200, color: "text-term-accent" },
         { text: "", delay: 300 },
         ...outro,
-        { text: "", delay: 300 },
-        { text: <>{c("root", "text-term-error")}@{c(target, "text-term-prompt")}:~# {c("find / -name '*.sh' -perm -u+x 2>/dev/null", "text-term-warning")}</>, delay: 600 },
-        { text: <>{c("/root/hire-me.sh", "text-term-accent")}</>, delay: 400 },
-        { text: <>{c("root", "text-term-error")}@{c(target, "text-term-prompt")}:~# {c("cat /root/hire-me.sh", "text-term-warning")}</>, delay: 500 },
-        { text: <>{c("#!/bin/bash", "text-term-muted")}</>, delay: 150 },
-        { text: <>{c("# Only the worthy shall execute this", "text-term-muted")}</>, delay: 150 },
-        { text: <>{c("echo", "text-term-prompt")} {c('"You found the script. Now run: sudo hire-me"', "text-term-accent")}</>, delay: 300 },
-        { text: "", delay: 0 },
       );
+
+      if (isOwnServer) {
+        // CTF path: find the hire-me script
+        lines.push(
+          { text: "", delay: 300 },
+          { text: <>{c("root", "text-term-error")}@{c(target, "text-term-prompt")}:~# {c("find / -name '*.sh' -perm -u+x 2>/dev/null", "text-term-warning")}</>, delay: 600 },
+          { text: <>{c("/root/hire-me.sh", "text-term-accent")}</>, delay: 400 },
+          { text: <>{c("root", "text-term-error")}@{c(target, "text-term-prompt")}:~# {c("cat /root/hire-me.sh", "text-term-warning")}</>, delay: 500 },
+          { text: <>{c("#!/bin/bash", "text-term-muted")}</>, delay: 150 },
+          { text: <>{c("# Only the worthy shall execute this", "text-term-muted")}</>, delay: 150 },
+          { text: <>{c("echo", "text-term-prompt")} {c('"You found it. Now run: sudo hire-me"', "text-term-accent")}</>, delay: 300 },
+        );
+      } else {
+        // Not own server: hint to try the real target
+        lines.push(
+          { text: "", delay: 400 },
+          { text: <>{c("[*]", "text-term-accent")} Interesting... but this isn't the right target.</>, delay: 300 },
+          { text: <>{c("[*]", "text-term-accent")} What if you hack {c(SITE_HOST, "text-term-link")} instead?</>, delay: 400 },
+        );
+      }
+      lines.push({ text: "", delay: 0 });
     } else {
       const fail = pick(failScenarios(target))();
       const outro = pick(failOutros(target))();
@@ -245,11 +273,22 @@ register({
         { text: `══════════════════════════════════════════`, delay: 200, color: "text-term-muted" },
         { text: "", delay: 300 },
         ...outro,
-        { text: "", delay: 300 },
-        { text: <>{c("[*]", "text-term-accent")} Attack failed, but the firewall leaked something...</>, delay: 400 },
-        { text: <>{c("[*]", "text-term-accent")} Intercepted banner: {c('"Run sudo hire-me for a surprise"', "text-term-warning")}</>, delay: 500 },
-        { text: "", delay: 0 },
       );
+
+      if (isOwnServer) {
+        // CTF path: firewall leaks the secret even on fail
+        lines.push(
+          { text: "", delay: 300 },
+          { text: <>{c("[*]", "text-term-accent")} Attack failed, but the firewall leaked something...</>, delay: 400 },
+          { text: <>{c("[*]", "text-term-accent")} Intercepted banner: {c('"sudo hire-me"', "text-term-warning")}</>, delay: 500 },
+        );
+      } else {
+        lines.push(
+          { text: "", delay: 400 },
+          { text: <>{c("[*]", "text-term-accent")} Wrong target. Try hacking {c(SITE_HOST, "text-term-link")} — the admin's own server.</>, delay: 400 },
+        );
+      }
+      lines.push({ text: "", delay: 0 });
     }
 
     return { type: "jsx", content: <HackerAnimation lines={lines} /> };
