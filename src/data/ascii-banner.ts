@@ -13,4 +13,7 @@ export const WELCOME_LINES = [
   'Type "help" to see available commands.',
   'Type "open about" or "open blog" to visit other pages.',
   "",
+  "Psst... there's a secret hidden in this terminal.",
+  'Start with "ls -la" and see what you find.',
+  "",
 ];
