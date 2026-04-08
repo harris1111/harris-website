@@ -171,7 +171,7 @@ register({
       { text: "", delay: 100 },
       { text: <> * Documentation:  {c(`${SITE_URL}/docs`, "text-term-link")}</>, delay: 100 },
       { text: <> * Management:     {c(`${SITE_URL}/admin`, "text-term-link")}</>, delay: 100 },
-      { text: <> * Support:        {c(profile.email, "text-term-link")}</>, delay: 100 },
+      { text: <> * Support:        {c("[CLASSIFIED]", "text-term-error")}</>, delay: 100 },
       { text: "", delay: 100 },
       { text: <>  {c("System load:", "text-term-prompt")}  {c(`0.${rand(1, 9)}${rand(0, 9)}`, "text-term-warning")}          {c("Processes:", "text-term-prompt")}           {c(String(rand(120, 350)), "text-term-warning")}</>, delay: 150 },
       { text: <>  {c("Memory usage:", "text-term-prompt")} {c(`${rand(20, 65)}%`, "text-term-warning")}            {c("Users logged in:", "text-term-prompt")}     {c(String(rand(1, 5)), "text-term-warning")}</>, delay: 150 },

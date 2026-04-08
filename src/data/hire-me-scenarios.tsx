@@ -11,15 +11,15 @@ function bar(pct: number, label: string): HackerLine {
   return { text: <>    {c(`[${"#".repeat(filled)}${".".repeat(empty)}] ${pct}%`, color)} {label}</>, delay: pct === 100 ? 300 : 400 };
 }
 
-/** Contact info lines shared across all scenarios */
+/** Contact info lines — email/phone redacted, LinkedIn is primary */
 function contactLines(): HackerLine[] {
   const linkedin = profile.social.find(s => s.platform === "LinkedIn");
   const github = profile.social.find(s => s.platform === "GitHub");
   const lines: HackerLine[] = [
     { text: <>{c("  -- Secure Communication Channels --", "text-term-warning")}</>, delay: 300 },
     { text: "", delay: 100 },
-    { text: <>  {c("Email:", "text-term-warning")}     {c(profile.email, "text-term-link")}</>, delay: 150 },
-    { text: <>  {c("Phone:", "text-term-warning")}     {c(profile.phone, "text-term-link")}</>, delay: 150 },
+    { text: <>  {c("Email:", "text-term-warning")}     {c("[REDACTED]", "text-term-error")} -- reach out via LinkedIn</>, delay: 150 },
+    { text: <>  {c("Phone:", "text-term-warning")}     {c("[REDACTED]", "text-term-error")} -- available on request</>, delay: 150 },
   ];
   if (linkedin) lines.push({ text: <>  {c("LinkedIn:", "text-term-warning")}  {c(linkedin.url, "text-term-link")}</>, delay: 150 });
   if (github) lines.push({ text: <>  {c("GitHub:", "text-term-warning")}    {c(github.url, "text-term-link")}</>, delay: 150 });

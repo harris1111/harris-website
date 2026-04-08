@@ -138,7 +138,7 @@ register({
             <div>{c("[sudo]", "text-term-error")} user {c("harris", "text-term-prompt")} is not in the sudoers file.</div>
             <div>{c("[sudo]", "text-term-error")} This incident will be reported.</div>
             <div>{""}</div>
-            <div>Contact {c(profile.email, "text-term-link")} to request elevated access.</div>
+            <div>Contact via {c("LinkedIn", "text-term-link")} to request elevated access.</div>
           </div>
         ),
       };

@@ -64,9 +64,42 @@ body {
   text-shadow: 0 0 3px currentColor;
 }
 
-/* Hacker theme neon glow */
+/* Hacker theme cyberpunk neon */
 .hacker-theme * {
-  text-shadow: 0 0 5px currentColor, 0 0 10px rgba(255, 42, 109, 0.3);
+  text-shadow: 0 0 4px currentColor, 0 0 12px rgba(5, 217, 232, 0.2);
+}
+
+/* Scanline overlay animation */
+.hacker-theme::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(5, 217, 232, 0.03) 2px,
+    rgba(5, 217, 232, 0.03) 4px
+  );
+  animation: hacker-scan 8s linear infinite;
+  z-index: 50;
+}
+
+@keyframes hacker-scan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+/* Subtle flicker on hacker theme text */
+.hacker-theme body {
+  animation: hacker-flicker 4s ease-in-out infinite;
+}
+
+@keyframes hacker-flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96% { opacity: 0.92; }
+  97% { opacity: 0.98; }
 }
 
 /* Smooth theme transitions */
