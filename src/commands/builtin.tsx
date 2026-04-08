@@ -34,7 +34,7 @@ export function registerBuiltins() {
             <div>{""}</div>
             {cmds.map((cmd) => (
               <div key={cmd.name}>
-                {"  "}{c(cmd.name.padEnd(16), "text-term-prompt")} {cmd.description}
+                {"  "}{c(cmd.name.padEnd(16), "text-term-warning")} {cmd.description}
               </div>
             ))}
             <div>{""}</div>
