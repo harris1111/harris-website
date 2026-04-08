@@ -2,6 +2,8 @@ import { register, getAllCommands } from "./registry";
 import { c } from "./format-helpers";
 import { profile } from "@/data/profile";
 import { QUOTES } from "@/data/quotes";
+import { HackerAnimation, type HackerLine } from "@/components/hacker-animation";
+import { SITE_URL } from "@/lib/site-config";
 
 /* === neofetch === */
 register({
@@ -97,7 +99,7 @@ register({
   description: "Execute with elevated privileges",
   usage: "sudo <command>",
   execute: (args) => {
-    // No args → hint at the easter egg
+    // No args → obvious hint
     if (args.length === 0) {
       return {
         type: "jsx",
@@ -107,9 +109,9 @@ register({
             <div>{""}</div>
             <div>{c("Available sudo commands:", "text-term-accent")}</div>
             <div>  {c("sudo <cmd>", "text-term-warning")}        Run a command as root</div>
-            <div>  {c("sudo ██████-██", "text-term-muted")}    {c("[REDACTED]", "text-term-error")} — clearance level 5 required</div>
+            <div>  {c("sudo ████-me", "text-term-muted")}      {c("[CLASSIFIED]", "text-term-error")} — clearance level 5 required</div>
             <div>{""}</div>
-            <div className="text-term-muted">Hint: What would you ask a DevOps engineer to do?</div>
+            <div className="text-term-muted">You've seen the CV. Impressed? Complete the command.</div>
           </div>
         ),
       };
@@ -118,27 +120,59 @@ register({
     if (args.join("-").toLowerCase() === "hire-me") {
       const linkedin = profile.social.find(s => s.platform === "LinkedIn");
       const github = profile.social.find(s => s.platform === "GitHub");
-      return {
-        type: "jsx",
-        content: (
-          <div className="whitespace-pre-wrap font-mono">
-            <div>{""}</div>
-            <div className="text-term-accent">  ┌─────────────────────────────────────────┐</div>
-            <div className="text-term-accent">  │                                         │</div>
-            <div>  │  {c("ACCESS GRANTED", "text-term-accent")} — {c("root privileges obtained", "text-term-prompt")}  │</div>
-            <div className="text-term-accent">  │                                         │</div>
-            <div className="text-term-accent">  └─────────────────────────────────────────┘</div>
-            <div>{""}</div>
-            <div>  {c("Email:", "text-term-warning")}     {c(profile.email, "text-term-link")}</div>
-            <div>  {c("Phone:", "text-term-warning")}     {c(profile.phone, "text-term-link")}</div>
-            {linkedin && <div>  {c("LinkedIn:", "text-term-warning")}  {c(linkedin.url, "text-term-link")}</div>}
-            {github && <div>  {c("GitHub:", "text-term-warning")}    {c(github.url, "text-term-link")}</div>}
-            <div>{""}</div>
-            <div>  {c("Let's build something together!", "text-term-accent")}</div>
-            <div>{""}</div>
-          </div>
-        ),
-      };
+
+      const lines: HackerLine[] = [
+        { text: "", delay: 0 },
+        { text: <>{c("[sudo]", "text-term-warning")} verifying credentials...</>, delay: 400 },
+        { text: <>{c("[sudo]", "text-term-warning")} password for {c("recruiter", "text-term-prompt")}: {c("************", "text-term-muted")}</>, delay: 600 },
+        { text: <>{c("[sudo]", "text-term-accent")} authentication successful</>, delay: 500 },
+        { text: "", delay: 300 },
+        { text: <>{c("[*]", "text-term-accent")} Decrypting classified personnel file...</>, delay: 500 },
+        { text: <>{c("[*]", "text-term-accent")} Bypassing HR firewall...</>, delay: 400 },
+        { text: <>{c("[*]", "text-term-accent")} Extracting candidate profile...</>, delay: 400 },
+        { text: <>{c("[+]", "text-term-accent")} File decrypted successfully</>, delay: 500 },
+        { text: "", delay: 400 },
+        { text: `  ╔════════════════════════════════════════════════╗`, delay: 100, color: "text-term-accent" },
+        { text: `  ║                                                ║`, delay: 50, color: "text-term-accent" },
+        { text: <>  ║   {c("█ █ █ █▀▄ █▀▀   █▄ ▄█ █▀▀", "text-term-prompt")}                ║</>, delay: 80 },
+        { text: <>  ║   {c("█▀█ █ █▀▄ █▀▀   █ ▀ █ █▀▀", "text-term-prompt")}                ║</>, delay: 80 },
+        { text: <>  ║   {c("▀ ▀ ▀ ▀ ▀ ▀▀▀   ▀   ▀ ▀▀▀", "text-term-prompt")}                ║</>, delay: 80 },
+        { text: `  ║                                                ║`, delay: 50, color: "text-term-accent" },
+        { text: <>  ║   {c("ACCESS LEVEL:", "text-term-warning")} {c("MAXIMUM", "text-term-error")}                        ║</>, delay: 200 },
+        { text: <>  ║   {c("STATUS:", "text-term-warning")}       {c("AVAILABLE FOR HIRE", "text-term-accent")}               ║</>, delay: 200 },
+        { text: <>  ║   {c("THREAT:", "text-term-warning")}       {c("WILL IMPROVE YOUR INFRA", "text-term-prompt")}          ║</>, delay: 200 },
+        { text: `  ║                                                ║`, delay: 50, color: "text-term-accent" },
+        { text: `  ╚════════════════════════════════════════════════╝`, delay: 100, color: "text-term-accent" },
+        { text: "", delay: 300 },
+        { text: <>{c("  ── Secure Communication Channels ──", "text-term-warning")}</>, delay: 300 },
+        { text: "", delay: 100 },
+        { text: <>  {c("Email:", "text-term-warning")}     {c(profile.email, "text-term-link")}</>, delay: 150 },
+        { text: <>  {c("Phone:", "text-term-warning")}     {c(profile.phone, "text-term-link")}</>, delay: 150 },
+      ];
+
+      if (linkedin) {
+        lines.push({ text: <>  {c("LinkedIn:", "text-term-warning")}  {c(linkedin.url, "text-term-link")}</>, delay: 150 });
+      }
+      if (github) {
+        lines.push({ text: <>  {c("GitHub:", "text-term-warning")}    {c(github.url, "text-term-link")}</>, delay: 150 });
+      }
+
+      lines.push(
+        { text: <>  {c("Web:", "text-term-warning")}       {c(SITE_URL, "text-term-link")}</>, delay: 150 },
+        { text: "", delay: 300 },
+        { text: <>{c("  ── Mission Brief ──", "text-term-warning")}</>, delay: 300 },
+        { text: "", delay: 100 },
+        { text: <>  {c("\"I don't just deploy code. I build systems that", "text-term-muted")}</>, delay: 200 },
+        { text: <>  {c(" survive at 3 AM when nobody's watching.\"", "text-term-muted")}</>, delay: 200 },
+        { text: "", delay: 300 },
+        { text: <>  {c("K8s clusters", "text-term-link")} that auto-heal. {c("CI/CD pipelines", "text-term-link")} that never break.</>, delay: 200 },
+        { text: <>  {c("99.95%", "text-term-accent")} uptime. {c("10M req/day", "text-term-accent")}. Zero excuses.</>, delay: 200 },
+        { text: "", delay: 400 },
+        { text: <>  {c("GG WP. Now go send that email.", "text-term-accent")}</>, delay: 500 },
+        { text: "", delay: 0 },
+      );
+
+      return { type: "jsx", content: <HackerAnimation lines={lines} /> };
     }
 
     // Check if the argument is a known command
