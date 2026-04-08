@@ -105,5 +105,6 @@ export function registerAllCommands() {
   require("./blog");
   require("./guestbook");
   require("./easter-eggs");
+  require("./hacker-sim");
   require("./open");
 }
