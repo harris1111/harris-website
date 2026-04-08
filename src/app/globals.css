@@ -66,40 +66,33 @@ body {
 
 /* Hacker theme cyberpunk neon */
 .hacker-theme * {
-  text-shadow: 0 0 4px currentColor, 0 0 12px rgba(5, 217, 232, 0.2);
+  text-shadow: 0 0 4px currentColor, 0 0 12px rgba(5, 217, 232, 0.15);
 }
 
-/* Scanline overlay animation */
-.hacker-theme::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(5, 217, 232, 0.03) 2px,
-    rgba(5, 217, 232, 0.03) 4px
-  );
-  animation: hacker-scan 8s linear infinite;
-  z-index: 50;
-}
-
+/* Scanline drift animation for hacker overlay */
 @keyframes hacker-scan {
   0% { transform: translateY(0); }
   100% { transform: translateY(4px); }
 }
 
-/* Subtle flicker on hacker theme text */
+/* Glitch bar sweeps down the screen */
+@keyframes hacker-glitch-bar {
+  0%, 100% { top: -2px; opacity: 0; }
+  5% { opacity: 0.3; }
+  50% { top: 100%; opacity: 0.3; }
+  55% { opacity: 0; }
+}
+
+/* Subtle flicker on hacker theme */
 .hacker-theme body {
-  animation: hacker-flicker 4s ease-in-out infinite;
+  animation: hacker-flicker 5s ease-in-out infinite;
 }
 
 @keyframes hacker-flicker {
-  0%, 95%, 100% { opacity: 1; }
-  96% { opacity: 0.92; }
-  97% { opacity: 0.98; }
+  0%, 94%, 100% { opacity: 1; }
+  95% { opacity: 0.9; }
+  96% { opacity: 0.97; }
+  97% { opacity: 0.92; }
 }
 
 /* Smooth theme transitions */

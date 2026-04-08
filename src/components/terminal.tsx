@@ -86,7 +86,8 @@ export function Terminal() {
       className="h-dvh overflow-y-auto bg-term-bg text-term-fg text-sm md:text-base transition-colors duration-300 px-4 pt-4 pb-2"
       onClick={handleContainerClick}
     >
-      {(terminal.theme === "matrix" || terminal.theme === "hacker") && <CrtOverlay />}
+      {terminal.theme === "matrix" && <CrtOverlay variant="matrix" />}
+      {terminal.theme === "hacker" && <CrtOverlay variant="hacker" />}
 
       {/* Welcome banner — animates on first load, stays permanently */}
       {!isComplete ? (
