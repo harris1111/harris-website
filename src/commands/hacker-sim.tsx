@@ -194,7 +194,7 @@ register({
   description: "Launch attack on target",
   usage: "hack <target>",
   execute: (args) => {
-    // No args → require a target
+    // No args → require a target, hint without giving away domain
     if (!args[0]) {
       return {
         type: "jsx",
@@ -202,13 +202,15 @@ register({
           <div className="whitespace-pre-wrap font-mono">
             <div>{c("Usage:", "text-term-warning")} hack {c("<target>", "text-term-muted")}</div>
             <div>{""}</div>
-            <div>Example: hack {c(SITE_HOST, "text-term-link")}</div>
+            <div className="text-term-muted">Try hacking the server you're on right now.</div>
           </div>
         ),
       };
     }
 
-    const target = args[0];
+    // Strip http(s):// prefix if provided
+    const rawTarget = args[0].replace(/^https?:\/\//, "").replace(/\/$/, "");
+    const target = rawTarget;
     const ip = randIp();
     const isOwnServer = target.toLowerCase() === SITE_HOST.toLowerCase();
     const isOddMinute = new Date().getMinutes() % 2 !== 0;
@@ -219,18 +221,45 @@ register({
     const recon = pick(reconPool)();
     const scan = pick(scanPool)();
 
+    // Progress bar helpers
+    const bar = (pct: number) => {
+      const filled = Math.round(pct / 5);
+      const empty = 20 - filled;
+      return `[${"#".repeat(filled)}${".".repeat(empty)}] ${pct}%`;
+    };
+
     const lines: HackerLine[] = [
       { text: "", delay: 0 },
       { text: <>{c("[*]", "text-term-accent")} Target: {c(target, "text-term-link")} ({c(ip, "text-term-warning")})</>, delay: 300 },
       { text: <>{c("[*]", "text-term-accent")} Initializing attack framework {c(`v${rand(3, 5)}.${rand(0, 9)}.${rand(0, 9)}`, "text-term-prompt")}...</>, delay: 500 },
       { text: "", delay: 200 },
-      { text: <>{c("── Phase 1: Reconnaissance ──", "text-term-warning")}</>, delay: 400 },
+
+      // Phase 1
+      { text: <>{c("-- Phase 1: Reconnaissance --", "text-term-warning")}</>, delay: 400 },
+      { text: <>{c("[*]", "text-term-muted")} Gathering intelligence on target...</>, delay: 300 },
+      { text: <>    {c(bar(20), "text-term-muted")} Subdomain enumeration</>, delay: 300 },
+      { text: <>    {c(bar(55), "text-term-muted")} OSINT collection</>, delay: 400 },
+      { text: <>    {c(bar(100), "text-term-accent")} Recon complete</>, delay: 300 },
       ...recon,
       { text: "", delay: 200 },
-      { text: <>{c("── Phase 2: Scanning ──", "text-term-warning")}</>, delay: 400 },
+
+      // Phase 2
+      { text: <>{c("-- Phase 2: Scanning --", "text-term-warning")}</>, delay: 400 },
+      { text: <>{c("[*]", "text-term-muted")} Probing attack surface...</>, delay: 300 },
+      { text: <>    {c(bar(15), "text-term-muted")} Port scanning</>, delay: 350 },
+      { text: <>    {c(bar(40), "text-term-muted")} Service fingerprinting</>, delay: 400 },
+      { text: <>    {c(bar(75), "text-term-muted")} Vulnerability matching</>, delay: 500 },
+      { text: <>    {c(bar(100), "text-term-accent")} Scan complete</>, delay: 300 },
       ...scan,
       { text: "", delay: 200 },
-      { text: <>{c("── Phase 3: Exploitation ──", "text-term-warning")}</>, delay: 400 },
+
+      // Phase 3
+      { text: <>{c("-- Phase 3: Exploitation --", "text-term-warning")}</>, delay: 400 },
+      { text: <>{c("[*]", "text-term-muted")} Loading exploit modules...</>, delay: 300 },
+      { text: <>    {c(bar(10), "text-term-muted")} Payload generation</>, delay: 300 },
+      { text: <>    {c(bar(45), "text-term-muted")} Encoding & obfuscation</>, delay: 400 },
+      { text: <>    {c(bar(80), "text-term-muted")} Exploit delivery</>, delay: 500 },
+      { text: <>    {c(bar(100), "text-term-accent")} Payload deployed</>, delay: 400 },
     ];
 
     if (isOddMinute) {

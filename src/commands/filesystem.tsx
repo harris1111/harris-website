@@ -28,14 +28,17 @@ function fakeDate(): string {
 function longRow(node: FSNode, showAll: boolean) {
   if (!showAll && node.name.startsWith(".")) return null;
   const isDir = node.type === "directory";
+  const isHidden = node.name.startsWith(".");
   const perms = isDir ? "drwxr-xr-x" : "-rw-r--r--";
   const size = fakeSize(node).padStart(6);
   const date = fakeDate();
   const name = isDir ? `${node.name}/` : node.name;
-  const nameColor = isDir ? "text-term-link" : "text-term-fg";
+  // Hidden files render very dim — hard to notice at first glance
+  const dimClass = isHidden ? "opacity-40" : "";
+  const nameColor = isHidden ? "text-term-muted" : isDir ? "text-term-link" : "text-term-fg";
 
   return (
-    <div key={node.name}>
+    <div key={node.name} className={dimClass}>
       {c(perms, "text-term-muted")} {c("harris", "text-term-prompt")} harris {c(size, "text-term-warning")} {c(date, "text-term-muted")} {c(name, nameColor)}
     </div>
   );
