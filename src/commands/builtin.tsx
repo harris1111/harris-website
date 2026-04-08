@@ -26,18 +26,39 @@ export function registerBuiltins() {
         };
       }
 
+      /** Command groups for organized help display */
+      const groups: { label: string; names: string[] }[] = [
+        { label: "Profile", names: ["about", "skills", "experience", "education", "certifications", "projects", "timeline", "contact", "social"] },
+        { label: "Terminal", names: ["help", "man", "clear", "echo", "whoami", "history", "theme", "date", "uname"] },
+        { label: "Navigation", names: ["cd", "ls", "cat", "pwd", "tree", "open"] },
+        { label: "Content", names: ["blog", "guestbook", "download-cv"] },
+        { label: "Hacker Tools", names: ["nmap", "ping", "traceroute", "ssh", "hack", "exploit", "decrypt"] },
+        { label: "Fun", names: ["neofetch", "cowsay", "fortune", "sudo", "matrix"] },
+      ];
+
+      const cmdMap = new Map(cmds.map((cmd) => [cmd.name, cmd]));
+
       return {
         type: "jsx",
         content: (
           <div className="whitespace-pre-wrap font-mono">
-            <div>{c("Available commands:", "text-term-accent")}</div>
-            <div>{""}</div>
-            {cmds.map((cmd) => (
-              <div key={cmd.name}>
-                {"  "}{c(cmd.name.padEnd(16), "text-term-warning")} {cmd.description}
-              </div>
-            ))}
-            <div>{""}</div>
+            {groups.map((group) => {
+              const groupCmds = group.names
+                .map((n) => cmdMap.get(n))
+                .filter(Boolean);
+              if (groupCmds.length === 0) return null;
+              return (
+                <div key={group.label}>
+                  <div>{c(`── ${group.label} ──`, "text-term-accent")}</div>
+                  {groupCmds.map((cmd) => (
+                    <div key={cmd!.name}>
+                      {"  "}{c(cmd!.name.padEnd(16), "text-term-warning")} {cmd!.description}
+                    </div>
+                  ))}
+                  <div>{""}</div>
+                </div>
+              );
+            })}
             <div className="text-term-muted">Tip: {c("<command> --help", "text-term-warning")} for details</div>
           </div>
         ),
