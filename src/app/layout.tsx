@@ -91,6 +91,31 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen font-[family-name:var(--font-mono)]">
+        {/* Console easter egg for devtools users */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              console.log(
+                "%c  _  _ ___ ___ ___   __  __ ___ %c\\n" +
+                "%c | || |_ _| _ \\\\ __| |  \\\\/  | __|%c\\n" +
+                "%c | __ || ||   / _|  | |\\\\/| | _| %c\\n" +
+                "%c |_||_|___|_|_\\\\___| |_|  |_|___|%c\\n",
+                "color:#05d9e8;font-size:14px;font-weight:bold;","",
+                "color:#05d9e8;font-size:14px;font-weight:bold;","",
+                "color:#05d9e8;font-size:14px;font-weight:bold;","",
+                "color:#05d9e8;font-size:14px;font-weight:bold;",""
+              );
+              console.log(
+                "%cYou opened devtools. You're my kind of person.%c\\n" +
+                "%cGo back to the terminal and type: sudo hire-me%c\\n" +
+                "%cOr start with: ls -la%c",
+                "color:#ff2a6d;font-size:13px;font-weight:bold;","",
+                "color:#01c38d;font-size:12px;","",
+                "color:#f5a623;font-size:11px;",""
+              );
+            `,
+          }}
+        />
         {/* Hidden semantic HTML for screen readers and crawlers */}
         <div className="sr-only" aria-hidden="false">
           <h1>Nguyen Minh An — DevOps Engineer</h1>

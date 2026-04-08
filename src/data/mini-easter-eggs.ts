@@ -1,6 +1,18 @@
 /** Mini easter eggs — hidden arguments for each command.
  *  hint: shown at bottom of normal output to guide discovery
- *  msg: shown when the secret arg is used */
+ *  msg: shown when the secret arg is used (includes reward + nudge) */
+
+const REWARDS = [
+  "You found a mini egg! There's a bigger secret hiding in this terminal...",
+  "Nice find! But the real prize requires root access. Try: ls -la",
+  "Easter egg collected! The admin left something classified on this server...",
+  "Achievement: curious explorer! There's a hidden file worth finding...",
+  "You're good at this. Ever tried hacking this server?",
+];
+
+function reward(): string {
+  return REWARDS[Math.floor(Math.random() * REWARDS.length)];
+}
 
 const EGGS: Record<string, { arg: string; hint: string; msg: string }> = {
   about:          { arg: "tldr",     hint: "Try: about tldr",              msg: "TL;DR: DevOps nerd who breaks prod at 2 AM and fixes it by 2:05." },
@@ -20,7 +32,9 @@ const EGGS: Record<string, { arg: string; hint: string; msg: string }> = {
 export function checkMiniEgg(command: string, args: string[]): string | null {
   const egg = EGGS[command];
   if (!egg) return null;
-  if (args.some(a => a.toLowerCase() === egg.arg)) return egg.msg;
+  if (args.some(a => a.toLowerCase() === egg.arg)) {
+    return `${egg.msg}\n\n${reward()}`;
+  }
   return null;
 }
 
