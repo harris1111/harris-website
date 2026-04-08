@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.github
+.claude
+.gitnexus
+plans
+docs
+*.md
+!README.md
+.env
+.env.local
+.vscode
+.idea

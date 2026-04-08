@@ -2,9 +2,42 @@ import type { CommandHandler, CommandOutput, ParsedCommand, TerminalContext } fr
 
 const commands = new Map<string, CommandHandler>();
 
+/** Lazy loaders — resolved on first execution */
+const lazyLoaders = new Map<string, () => Promise<unknown>>();
+
 /** Register a command handler */
 export function register(handler: CommandHandler) {
   commands.set(handler.name, handler);
+}
+
+/**
+ * Register a lazy command stub — shows in help/autocomplete immediately,
+ * but the module is only imported when the command is first executed.
+ * The loader should call register() as a side effect.
+ */
+export function registerLazy(
+  name: string,
+  description: string,
+  loader: () => Promise<unknown>,
+  usage?: string,
+) {
+  lazyLoaders.set(name, loader);
+  commands.set(name, {
+    name,
+    description,
+    usage,
+    execute: async (args, ctx, flags) => {
+      // Load the real module (its side-effect will re-register the command)
+      await loader();
+      lazyLoaders.delete(name);
+      // Now execute the real handler
+      const realHandler = commands.get(name);
+      if (realHandler) {
+        return realHandler.execute(args, ctx, flags);
+      }
+      return { type: "error", content: `Failed to load command: ${name}` };
+    },
+  });
 }
 
 /** Parse raw input into command, args, and flags */
@@ -46,7 +79,6 @@ export function parse(input: string): ParsedCommand {
     if (token.startsWith("--")) {
       const key = token.slice(2);
       const next = tokens[i + 1];
-      // If next token exists and isn't a flag, treat it as the value
       if (next && !next.startsWith("--")) {
         flags[key] = next;
         i++;

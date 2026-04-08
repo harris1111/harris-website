@@ -1,4 +1,4 @@
-import { register, getAllCommands } from "./registry";
+import { register, registerLazy, getAllCommands } from "./registry";
 import { c } from "./format-helpers";
 
 /** Register built-in commands: help, clear, whoami, echo, man */
@@ -134,7 +134,8 @@ export function registerBuiltins() {
 /** Import all CV command modules (side-effect: registers them) */
 export function registerAllCommands() {
   registerBuiltins();
-  // These imports register commands as side effects
+
+  // Core CV commands — always loaded (small, frequently used)
   require("./about");
   require("./skills");
   require("./experience");
@@ -146,11 +147,38 @@ export function registerAllCommands() {
   require("./timeline");
   require("./download-cv");
   require("./history-cmd");
-  require("./filesystem");
   require("./theme");
-  require("./blog");
-  require("./guestbook");
-  require("./easter-eggs");
-  require("./hacker-sim");
   require("./open");
+
+  // Lazy-loaded commands — heavy modules loaded on first use
+  const hackerLoader = () => import("./hacker-sim");
+  registerLazy("nmap", "Network port scanner", hackerLoader, "nmap <target>");
+  registerLazy("ping", "Send ICMP ping to a host", hackerLoader, "ping <host>");
+  registerLazy("traceroute", "Trace network route to host", hackerLoader, "traceroute <host>");
+  registerLazy("ssh", "Open SSH connection to host", hackerLoader, "ssh [user@]<host>");
+  registerLazy("hack", "Launch attack on target", hackerLoader, "hack <target>");
+  registerLazy("exploit", "Run exploit against target", hackerLoader, "exploit <target>");
+  registerLazy("decrypt", "Decrypt an encrypted file", hackerLoader, "decrypt <file>");
+
+  const easterLoader = () => import("./easter-eggs");
+  registerLazy("neofetch", "Display system info (profile summary)", easterLoader);
+  registerLazy("cowsay", "Make a cow say something", easterLoader, "cowsay <message>");
+  registerLazy("fortune", "Random DevOps wisdom", easterLoader);
+  registerLazy("sudo", "Execute with elevated privileges", easterLoader, "sudo <command>");
+  registerLazy("matrix", "Enter the Matrix", easterLoader);
+  registerLazy("date", "Display current date and time", easterLoader);
+  registerLazy("uname", "Display system information", easterLoader);
+
+  const fsLoader = () => import("./filesystem");
+  registerLazy("cd", "Change directory", fsLoader, "cd [path]");
+  registerLazy("ls", "List directory contents", fsLoader, "ls [-la] [path]");
+  registerLazy("cat", "Display file contents", fsLoader, "cat <file>");
+  registerLazy("pwd", "Print working directory", fsLoader, "pwd");
+  registerLazy("tree", "Display directory tree", fsLoader, "tree [-L depth] [path]");
+
+  const blogLoader = () => import("./blog");
+  registerLazy("blog", "Read blog posts", blogLoader, "blog [slug]");
+
+  const guestbookLoader = () => import("./guestbook");
+  registerLazy("guestbook", "Read or sign the guestbook", guestbookLoader, "guestbook [sign <name> <message>]");
 }
