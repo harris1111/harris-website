@@ -48,7 +48,7 @@ const jsonLd = {
   "@type": "Person",
   name: "Nguyen Minh An",
   jobTitle: "DevOps Engineer",
-  url: "https://example.com", // Replace with actual domain
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://cv.minhan.dev",
   email: "minhan112001@gmail.com",
   telephone: "+84347802611",
   address: {

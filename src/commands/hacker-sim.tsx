@@ -7,6 +7,8 @@ import {
   reconScenarios, scanScenarios, failScenarios, successScenarios,
 } from "@/data/hacker-scenarios";
 import { successOutros, failOutros } from "@/data/hacker-outros";
+import { SITE_HOST, SITE_URL } from "@/lib/site-config";
+import { profile } from "@/data/profile";
 
 /* ── nmap ── */
 
@@ -15,7 +17,7 @@ register({
   description: "Simulate a network port scan",
   usage: "nmap <target>",
   execute: (args) => {
-    const target = args[0] || "harris.cv";
+    const target = args[0] || SITE_HOST;
     const ip = randIp();
     const ports = pickN(OPEN_PORTS, rand(3, 7)).sort((a, b) => a.port - b.port);
     const closed = pickN(CLOSED_PORTS, rand(2, 4));
@@ -64,7 +66,7 @@ register({
   description: "Simulate ICMP ping to a host",
   usage: "ping <host>",
   execute: (args) => {
-    const host = args[0] || "harris.cv";
+    const host = args[0] || SITE_HOST;
     const ip = randIp();
     const lines: HackerLine[] = [
       { text: <>{c("PING", "text-term-prompt")} {c(host, "text-term-link")} ({c(ip, "text-term-warning")}) {c("56(84)", "text-term-muted")} bytes of data.</>, delay: 200 },
@@ -98,7 +100,7 @@ register({
   description: "Simulate network route tracing",
   usage: "traceroute <host>",
   execute: (args) => {
-    const host = args[0] || "harris.cv";
+    const host = args[0] || SITE_HOST;
     const destIp = randIp();
     const hops = rand(8, 16);
     const lines: HackerLine[] = [
@@ -141,7 +143,7 @@ register({
   description: "Simulate an SSH connection",
   usage: "ssh [user@]<host>",
   execute: (args) => {
-    const target = args[0] || "root@harris.cv";
+    const target = args[0] || `root@${SITE_HOST}`;
     const [user, host] = target.includes("@") ? target.split("@") : ["harris", target];
     const ip = randIp();
     const fp = randHex(43).replace(/(.{11})/g, "$1:").slice(0, -1);
@@ -166,9 +168,9 @@ register({
       { text: <>{c("Authenticated", "text-term-accent")} to {c(host, "text-term-link")} ([{c(ip, "text-term-warning")}]:{c("22", "text-term-accent")}) using {c('"publickey"', "text-term-prompt")}.</>, delay: 500 },
       { text: <>Welcome to {c("HarrisOS 1.0.0", "text-term-prompt")} ({c("GNU/Linux 6.5.0-harris x86_64", "text-term-muted")})</>, delay: 300 },
       { text: "", delay: 100 },
-      { text: <> * Documentation:  {c("https://harris.cv/docs", "text-term-link")}</>, delay: 100 },
-      { text: <> * Management:     {c("https://harris.cv/admin", "text-term-link")}</>, delay: 100 },
-      { text: <> * Support:        {c("minhan112001@gmail.com", "text-term-link")}</>, delay: 100 },
+      { text: <> * Documentation:  {c(`${SITE_URL}/docs`, "text-term-link")}</>, delay: 100 },
+      { text: <> * Management:     {c(`${SITE_URL}/admin`, "text-term-link")}</>, delay: 100 },
+      { text: <> * Support:        {c(profile.email, "text-term-link")}</>, delay: 100 },
       { text: "", delay: 100 },
       { text: <>  {c("System load:", "text-term-prompt")}  {c(`0.${rand(1, 9)}${rand(0, 9)}`, "text-term-warning")}          {c("Processes:", "text-term-prompt")}           {c(String(rand(120, 350)), "text-term-warning")}</>, delay: 150 },
       { text: <>  {c("Memory usage:", "text-term-prompt")} {c(`${rand(20, 65)}%`, "text-term-warning")}            {c("Users logged in:", "text-term-prompt")}     {c(String(rand(1, 5)), "text-term-warning")}</>, delay: 150 },
@@ -190,7 +192,7 @@ register({
   description: "Simulate a full hacking sequence",
   usage: "hack <target>",
   execute: (args) => {
-    const target = args[0] || "harris.cv";
+    const target = args[0] || SITE_HOST;
     const ip = randIp();
     const isOddMinute = new Date().getMinutes() % 2 !== 0;
 
@@ -250,7 +252,7 @@ register({
   description: "Simulate running an exploit",
   usage: "exploit <target>",
   execute: (args) => {
-    const target = args[0] || "harris.cv";
+    const target = args[0] || SITE_HOST;
     const ip = randIp();
     const cve = `CVE-2024-${rand(10000, 49999)}`;
 

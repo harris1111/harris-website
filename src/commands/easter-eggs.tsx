@@ -107,9 +107,9 @@ register({
             <div className="text-term-muted">  ║                                      ║</div>
             <div>  ║   {c("HIRE ME", "text-term-accent")} — {c("ACCESS GRANTED", "text-term-prompt")}      ║</div>
             <div className="text-term-muted">  ║                                      ║</div>
-            <div>  ║   {c("Email:", "text-term-warning")} {c("minhan112001@gmail.com", "text-term-link")}      ║</div>
-            <div>  ║   {c("Phone:", "text-term-warning")} {c("+84 347802611", "text-term-link")}               ║</div>
-            <div>  ║   {c("LinkedIn:", "text-term-warning")} {c("/in/minh-an-nguyen", "text-term-link")}       ║</div>
+            <div>  ║   {c("Email:", "text-term-warning")} {c(profile.email, "text-term-link")}      ║</div>
+            <div>  ║   {c("Phone:", "text-term-warning")} {c(profile.phone, "text-term-link")}               ║</div>
+            <div>  ║   {c("LinkedIn:", "text-term-warning")} {c(profile.social.find(s => s.platform === "LinkedIn")?.url || "", "text-term-link")}       ║</div>
             <div className="text-term-muted">  ║                                      ║</div>
             <div>  ║   {c("Let's build something together!", "text-term-accent")}    ║</div>
             <div className="text-term-muted">  ║                                      ║</div>

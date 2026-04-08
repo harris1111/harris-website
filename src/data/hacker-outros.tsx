@@ -1,6 +1,7 @@
 import { type HackerLine } from "@/components/hacker-animation";
 import { c } from "@/commands/format-helpers";
 import { rand, randIp, randHex } from "./hacker-scenarios";
+import { profile } from "./profile";
 
 /** Success outros — hacker broke in and is exploring the system */
 export function successOutros(t: string): (() => HackerLine[])[] {
@@ -76,9 +77,9 @@ export function successOutros(t: string): (() => HackerLine[])[] {
       { text: <>{c("root", "text-term-error")}@{c(t, "text-term-prompt")}:~# {c("vault kv get secret/harris/contact", "text-term-warning")}</>, delay: 400 },
       { text: <>{c("Key", "text-term-accent")}         {c("Value", "text-term-accent")}</>, delay: 150 },
       { text: `───         ─────`, delay: 100, color: "text-term-muted" },
-      { text: <>{c("email", "text-term-prompt")}       {c("minhan112001@gmail.com", "text-term-link")}</>, delay: 150 },
-      { text: <>{c("phone", "text-term-prompt")}       {c("+84 347802611", "text-term-warning")}</>, delay: 150 },
-      { text: <>{c("linkedin", "text-term-prompt")}    {c("/in/minh-an-nguyen", "text-term-link")}</>, delay: 150 },
+      { text: <>{c("email", "text-term-prompt")}       {c(profile.email, "text-term-link")}</>, delay: 150 },
+      { text: <>{c("phone", "text-term-prompt")}       {c(profile.phone, "text-term-warning")}</>, delay: 150 },
+      { text: <>{c("linkedin", "text-term-prompt")}    {c(profile.social.find(s => s.platform === "LinkedIn")?.url || "", "text-term-link")}</>, delay: 150 },
       { text: <>{c("[*]", "text-term-accent")} Target acquired. Run {c("'contact'", "text-term-link")} or {c("'social'", "text-term-link")} to connect</>, delay: 400 },
     ],
     () => [
