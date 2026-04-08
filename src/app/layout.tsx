@@ -106,12 +106,16 @@ export default function RootLayout({
                 "color:#05d9e8;font-size:14px;font-weight:bold;",""
               );
               console.log(
-                "%cYou opened devtools. You're my kind of person.%c\\n" +
-                "%cGo back to the terminal and type: sudo hire-me%c\\n" +
-                "%cOr start with: ls -la%c",
+                "%cYou opened devtools. You're my kind of person.%c\\n\\n" +
+                "%cThis is not the terminal you're looking for.%c\\n" +
+                "%cClose devtools, click the page, and type commands there.%c\\n\\n" +
+                "%cStart with: ls -la%c\\n" +
+                "%cOr go straight to: sudo hire-me%c",
                 "color:#ff2a6d;font-size:13px;font-weight:bold;","",
-                "color:#01c38d;font-size:12px;","",
-                "color:#f5a623;font-size:11px;",""
+                "color:#f5a623;font-size:12px;","",
+                "color:#f5a623;font-size:12px;","",
+                "color:#01c38d;font-size:12px;font-weight:bold;","",
+                "color:#01c38d;font-size:12px;font-weight:bold;",""
               );
             `,
           }}
