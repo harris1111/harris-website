@@ -2,8 +2,9 @@ import { register, getAllCommands } from "./registry";
 import { c } from "./format-helpers";
 import { profile } from "@/data/profile";
 import { QUOTES } from "@/data/quotes";
-import { HackerAnimation, type HackerLine } from "@/components/hacker-animation";
-import { SITE_URL } from "@/lib/site-config";
+import { HackerAnimation } from "@/components/hacker-animation";
+import { getHireMeScenario } from "@/data/hire-me-scenarios";
+import { unlockHackerTheme } from "@/themes/themes";
 
 /* === neofetch === */
 register({
@@ -118,57 +119,10 @@ register({
     }
 
     if (args.join("-").toLowerCase() === "hire-me") {
-      const linkedin = profile.social.find(s => s.platform === "LinkedIn");
-      const github = profile.social.find(s => s.platform === "GitHub");
-
-      const lines: HackerLine[] = [
-        { text: "", delay: 0 },
-        { text: <>{c("[sudo]", "text-term-warning")} verifying credentials...</>, delay: 400 },
-        { text: <>{c("[sudo]", "text-term-warning")} password for {c("recruiter", "text-term-prompt")}: {c("************", "text-term-muted")}</>, delay: 600 },
-        { text: <>{c("[sudo]", "text-term-accent")} authentication successful</>, delay: 500 },
-        { text: "", delay: 300 },
-        { text: <>{c("[*]", "text-term-accent")} Decrypting classified personnel file...</>, delay: 500 },
-        { text: <>{c("[*]", "text-term-accent")} Bypassing HR firewall...</>, delay: 400 },
-        { text: <>{c("[*]", "text-term-accent")} Extracting candidate profile...</>, delay: 400 },
-        { text: <>{c("[+]", "text-term-accent")} File decrypted successfully</>, delay: 500 },
-        { text: "", delay: 400 },
-        { text: <>{c("  _  _ ___ ___ ___   __  __ ___", "text-term-prompt")}</>, delay: 80 },
-        { text: <>{c(" | || |_ _| _ \\ __| |  \\/  | __|", "text-term-prompt")}</>, delay: 80 },
-        { text: <>{c(" | __ || ||   / _|  | |\\/| | _|", "text-term-prompt")}</>, delay: 80 },
-        { text: <>{c(" |_||_|___|_|_\\___| |_|  |_|___|", "text-term-prompt")}</>, delay: 80 },
-        { text: "", delay: 200 },
-        { text: <>  {c("ACCESS LEVEL:", "text-term-warning")} {c("MAXIMUM", "text-term-error")}</>, delay: 200 },
-        { text: <>  {c("STATUS:", "text-term-warning")}       {c("AVAILABLE FOR HIRE", "text-term-accent")}</>, delay: 200 },
-        { text: <>  {c("THREAT:", "text-term-warning")}       {c("WILL IMPROVE YOUR INFRA", "text-term-prompt")}</>, delay: 200 },
-        { text: "", delay: 300 },
-        { text: <>{c("  ── Secure Communication Channels ──", "text-term-warning")}</>, delay: 300 },
-        { text: "", delay: 100 },
-        { text: <>  {c("Email:", "text-term-warning")}     {c(profile.email, "text-term-link")}</>, delay: 150 },
-        { text: <>  {c("Phone:", "text-term-warning")}     {c(profile.phone, "text-term-link")}</>, delay: 150 },
-      ];
-
-      if (linkedin) {
-        lines.push({ text: <>  {c("LinkedIn:", "text-term-warning")}  {c(linkedin.url, "text-term-link")}</>, delay: 150 });
-      }
-      if (github) {
-        lines.push({ text: <>  {c("GitHub:", "text-term-warning")}    {c(github.url, "text-term-link")}</>, delay: 150 });
-      }
-
-      lines.push(
-        { text: <>  {c("Web:", "text-term-warning")}       {c(SITE_URL, "text-term-link")}</>, delay: 150 },
-        { text: "", delay: 300 },
-        { text: <>{c("  ── Mission Brief ──", "text-term-warning")}</>, delay: 300 },
-        { text: "", delay: 100 },
-        { text: <>  {c("\"I don't just deploy code. I build systems that", "text-term-muted")}</>, delay: 200 },
-        { text: <>  {c(" survive at 3 AM when nobody's watching.\"", "text-term-muted")}</>, delay: 200 },
-        { text: "", delay: 300 },
-        { text: <>  {c("K8s clusters", "text-term-link")} that auto-heal. {c("CI/CD pipelines", "text-term-link")} that never break.</>, delay: 200 },
-        { text: <>  {c("99.95%", "text-term-accent")} uptime. {c("10M req/day", "text-term-accent")}. Zero excuses.</>, delay: 200 },
-        { text: "", delay: 400 },
-        { text: <>  {c("GG WP. Now go send that email.", "text-term-accent")}</>, delay: 500 },
-        { text: "", delay: 0 },
-      );
-
+      // Unlock hacker theme as reward
+      unlockHackerTheme();
+      // Pick a random scenario from 5 options
+      const lines = getHireMeScenario();
       return { type: "jsx", content: <HackerAnimation lines={lines} /> };
     }
 

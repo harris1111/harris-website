@@ -8,7 +8,7 @@ import { useTypewriter } from "@/hooks/use-typewriter";
 import { WELCOME_LINES, SECRET_HINT } from "@/data/ascii-banner";
 import { registerAllCommands } from "@/commands/builtin";
 import { CrtOverlay } from "./crt-overlay";
-import { applyTheme, defaultTheme } from "@/themes/themes";
+import { applyTheme, defaultTheme, isHackerUnlocked, unlockHackerTheme } from "@/themes/themes";
 
 // Register commands once on module load
 let commandsRegistered = false;
@@ -26,8 +26,9 @@ export function Terminal() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  // Load theme from localStorage on mount
+  // Load theme from localStorage on mount + restore hacker theme if unlocked
   useEffect(() => {
+    if (isHackerUnlocked()) unlockHackerTheme();
     const saved = localStorage.getItem("harris-cv-theme") || defaultTheme;
     applyTheme(saved);
     terminal.setTheme(saved);
@@ -85,7 +86,7 @@ export function Terminal() {
       className="h-dvh overflow-y-auto bg-term-bg text-term-fg text-sm md:text-base transition-colors duration-300 px-4 pt-4 pb-2"
       onClick={handleContainerClick}
     >
-      {terminal.theme === "matrix" && <CrtOverlay />}
+      {(terminal.theme === "matrix" || terminal.theme === "hacker") && <CrtOverlay />}
 
       {/* Welcome banner — animates on first load, stays permanently */}
       {!isComplete ? (

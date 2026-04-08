@@ -84,8 +84,41 @@ export const themes: Record<string, ThemeConfig> = {
   },
 };
 
+/** Hacker theme — only available after sudo hire-me */
+export const hackerTheme: ThemeConfig = {
+  name: "hacker",
+  label: "Hacker (unlocked)",
+  colors: {
+    bg: "#0d0208",
+    fg: "#ff2a6d",
+    prompt: "#05d9e8",
+    accent: "#d1f7ff",
+    error: "#ff0055",
+    warning: "#f5a623",
+    muted: "#4a1942",
+    selection: "#1a0a2e",
+    border: "#2d1b4e",
+    link: "#01c38d",
+  },
+  className: "hacker-theme",
+};
+
 export const themeNames = Object.keys(themes);
 export const defaultTheme = "dark";
+
+/** Check if hacker theme is unlocked */
+export function isHackerUnlocked(): boolean {
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem("harris-cv-hacker-unlocked") === "true";
+}
+
+/** Unlock the hacker theme */
+export function unlockHackerTheme(): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("harris-cv-hacker-unlocked", "true");
+  // Add it to the themes registry
+  themes["hacker"] = hackerTheme;
+}
 
 /** Apply a theme by setting CSS variables on document root */
 export function applyTheme(themeName: string): void {
@@ -106,11 +139,10 @@ export function applyTheme(themeName: string): void {
   root.style.setProperty("--term-border", colors.border);
   root.style.setProperty("--term-link", colors.link);
 
-  // Toggle matrix class for CRT effects
+  // Toggle theme-specific CSS classes for CRT/glow effects
+  root.classList.remove("matrix-theme", "hacker-theme");
   if (theme.className) {
     root.classList.add(theme.className);
-  } else {
-    root.classList.remove("matrix-theme");
   }
 
   // Persist

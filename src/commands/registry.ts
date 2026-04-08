@@ -1,4 +1,5 @@
 import type { CommandHandler, CommandOutput, ParsedCommand, TerminalContext } from "@/types";
+import { checkMiniEgg } from "@/data/mini-easter-eggs";
 
 const commands = new Map<string, CommandHandler>();
 
@@ -117,6 +118,12 @@ export async function execute(
       type: "text",
       content: `${handler.name}: ${handler.description}${handler.usage ? `\nUsage: ${handler.usage}` : ""}`,
     };
+  }
+
+  // Check for mini easter egg hidden arguments
+  const egg = checkMiniEgg(parsed.command, parsed.args);
+  if (egg) {
+    return { type: "text", content: egg };
   }
 
   return handler.execute(parsed.args, ctx, parsed.flags);

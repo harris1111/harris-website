@@ -64,6 +64,11 @@ body {
   text-shadow: 0 0 3px currentColor;
 }
 
+/* Hacker theme neon glow */
+.hacker-theme * {
+  text-shadow: 0 0 5px currentColor, 0 0 10px rgba(255, 42, 109, 0.3);
+}
+
 /* Smooth theme transitions */
 :root {
   transition: background-color 0.3s ease, color 0.3s ease;

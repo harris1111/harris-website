@@ -1,10 +1,14 @@
 import { register } from "./registry";
-import { themes, themeNames, applyTheme } from "@/themes/themes";
+import { themes, themeNames, applyTheme, isHackerUnlocked } from "@/themes/themes";
 
 function listThemes(currentTheme: string) {
-  const lines = themeNames.map((t) => {
+  const available = [...themeNames];
+  if (isHackerUnlocked()) available.push("hacker");
+
+  const lines = available.map((t) => {
     const theme = themes[t];
-    const marker = t === currentTheme ? " ◄ current" : "";
+    if (!theme) return `  ${t.padEnd(14)} (unknown)`;
+    const marker = t === currentTheme ? " << current" : "";
     return `  ${t.padEnd(14)} ${theme.label}${marker}`;
   });
   return { type: "text" as const, content: ["Themes:", "", ...lines].join("\n") };
@@ -15,12 +19,10 @@ register({
   description: "Change terminal theme",
   usage: "theme [name | --list]",
   execute: (args, ctx, flags) => {
-    // --list flag (parsed by registry)
     if (flags.list) {
       return listThemes(ctx.theme);
     }
 
-    // No args → show current theme
     if (args.length === 0) {
       return {
         type: "text",
@@ -30,16 +32,24 @@ register({
 
     const name = args[0].toLowerCase();
 
-    // "theme list" (positional arg)
     if (name === "list") {
       return listThemes(ctx.theme);
     }
 
-    // Switch theme
+    // Hacker theme gatekeeper
+    if (name === "hacker") {
+      if (!isHackerUnlocked()) {
+        return {
+          type: "error",
+          content: "theme: 'hacker' is locked. Complete the secret challenge to unlock it.",
+        };
+      }
+    }
+
     if (!themes[name]) {
       return {
         type: "error",
-        content: `Unknown theme: ${name}. Available: ${themeNames.join(", ")}`,
+        content: `Unknown theme: ${name}. Use 'theme --list' to see available themes.`,
       };
     }
 
