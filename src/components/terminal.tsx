@@ -76,7 +76,7 @@ export function Terminal() {
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       ref={scrollRef}
-      className="h-dvh overflow-y-auto bg-term-bg text-term-fg text-sm md:text-base transition-colors duration-300 px-4 pt-4 pb-2"
+      className="h-full overflow-y-auto bg-term-bg text-term-fg text-sm md:text-base transition-colors duration-300 px-4 pt-4 pb-2"
       onClick={handleContainerClick}
     >
       {terminal.theme === "matrix" && <CrtOverlay variant="matrix" />}
