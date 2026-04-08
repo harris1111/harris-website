@@ -1,5 +1,5 @@
 import type { CommandHandler, CommandOutput, ParsedCommand, TerminalContext } from "@/types";
-import { checkMiniEgg } from "@/data/mini-easter-eggs";
+import { checkMiniEgg, getEggHint } from "@/data/mini-easter-eggs";
 
 const commands = new Map<string, CommandHandler>();
 
@@ -127,6 +127,13 @@ export async function execute(
   }
 
   return handler.execute(parsed.args, ctx, parsed.flags);
+}
+
+/** Get mini egg hint for a command (shown after output by terminal) */
+export function getHintForCommand(command: string, args: string[]): string | null {
+  // Only show hint when running command with no args (normal usage)
+  if (args.length > 0) return null;
+  return getEggHint(command);
 }
 
 /** Get command name completions for tab */

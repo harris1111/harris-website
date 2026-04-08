@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import type { OutputEntry, TerminalContext } from "@/types";
-import { execute, getCompletions } from "@/commands/registry";
+import { execute, parse, getCompletions, getHintForCommand } from "@/commands/registry";
 import { getPathCompletions } from "@/data/filesystem";
 
 const MAX_OUTPUTS = 1000;
@@ -89,6 +89,13 @@ export function useTerminal() {
             result.content
           )
         );
+      }
+
+      // Show mini easter egg hint after normal output
+      const parsed = parse(trimmed);
+      const hint = getHintForCommand(parsed.command, parsed.args);
+      if (hint && result.type !== "error") {
+        appendOutput(createEntry("system", hint));
       }
     },
     [appendOutput, clearTerminal]
