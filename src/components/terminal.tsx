@@ -87,8 +87,8 @@ export function Terminal() {
     >
       {terminal.theme === "matrix" && <CrtOverlay />}
 
-      {/* Welcome animation */}
-      {!isComplete && (
+      {/* Welcome banner — animates on first load, stays permanently */}
+      {!isComplete ? (
         <>
           {displayedLines.map((line, i) => (
             <div key={i} className="whitespace-pre-wrap text-term-accent">
@@ -97,11 +97,16 @@ export function Terminal() {
           ))}
           <span className="inline-block w-2 h-4 bg-term-accent animate-pulse" />
         </>
-      )}
-
-      {/* Output + inline input (flows together like a real terminal) */}
-      {isComplete && (
+      ) : (
         <>
+          {/* Static banner (always visible, survives clear) */}
+          {WELCOME_LINES.map((line, i) => (
+            <div key={i} className="whitespace-pre-wrap text-term-accent">
+              {line}
+            </div>
+          ))}
+
+          {/* Output + inline input */}
           <TerminalOutput entries={terminal.outputs} />
           <TerminalInput
             cwd={terminal.cwd}
