@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export interface HackerLine {
   text: string;
@@ -13,9 +13,11 @@ export interface HackerLine {
 /**
  * Progressively reveals lines with configurable delays,
  * simulating real terminal output from hacker tools.
+ * Auto-scrolls into view as new lines appear.
  */
 export function HackerAnimation({ lines }: { lines: HackerLine[] }) {
   const [visibleCount, setVisibleCount] = useState(0);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (visibleCount >= lines.length) return;
@@ -28,6 +30,11 @@ export function HackerAnimation({ lines }: { lines: HackerLine[] }) {
     return () => clearTimeout(timer);
   }, [visibleCount, lines]);
 
+  // Auto-scroll as each new line is revealed
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "instant" });
+  }, [visibleCount]);
+
   return (
     <div className="whitespace-pre-wrap font-mono">
       {lines.slice(0, visibleCount).map((line, i) => (
@@ -38,6 +45,7 @@ export function HackerAnimation({ lines }: { lines: HackerLine[] }) {
       {visibleCount < lines.length && (
         <span className="animate-pulse text-term-accent">█</span>
       )}
+      <div ref={bottomRef} />
     </div>
   );
 }

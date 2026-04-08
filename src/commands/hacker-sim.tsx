@@ -7,6 +7,15 @@ function rand(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function pickN<T>(arr: T[], n: number): T[] {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
+}
+
 function randIp() {
   return `${rand(10, 223)}.${rand(0, 255)}.${rand(0, 255)}.${rand(1, 254)}`;
 }
@@ -36,6 +45,300 @@ const OPEN_PORTS = [
 
 const CLOSED_PORTS = [21, 23, 25, 53, 110, 139, 445, 993, 995, 3389];
 
+/* ── hack scenario pools (10 each) ── */
+
+/** Phase 1: Recon — each returns HackerLine[] for that scenario */
+function reconScenarios(target: string): (() => HackerLine[])[] {
+  return [
+    () => [
+      { text: `[+] Enumerating subdomains...`, delay: 300 },
+      { text: `    Found: api.${target}`, delay: 200 },
+      { text: `    Found: admin.${target}`, delay: 150 },
+      { text: `    Found: staging.${target}`, delay: 180 },
+      { text: `[+] ${rand(3, 7)} subdomains discovered`, delay: 200 },
+    ],
+    () => [
+      { text: `[+] Running OSINT on ${target}...`, delay: 400 },
+      { text: `    GitHub repos found: ${rand(5, 25)}`, delay: 200 },
+      { text: `    Leaked emails: ${rand(1, 4)} addresses`, delay: 250 },
+      { text: `    Employee profiles: ${rand(2, 8)} on LinkedIn`, delay: 200 },
+    ],
+    () => [
+      { text: `[+] DNS zone transfer attempt...`, delay: 350 },
+      { text: `    AXFR query to ns1.${target}...`, delay: 300 },
+      { text: `    Got ${rand(12, 45)} DNS records`, delay: 250 },
+      { text: `    MX, A, AAAA, CNAME, TXT entries dumped`, delay: 200 },
+    ],
+    () => [
+      { text: `[+] Shodan search for ${target}...`, delay: 400 },
+      { text: `    ${rand(2, 6)} hosts found in ${rand(1, 3)} data centers`, delay: 250 },
+      { text: `    Cloud provider: ${pick(["AWS", "GCP", "Azure", "DigitalOcean", "Hetzner"])}`, delay: 200 },
+      { text: `    SSL cert CN: *.${target}`, delay: 200 },
+    ],
+    () => [
+      { text: `[+] Wayback Machine crawl...`, delay: 350 },
+      { text: `    ${rand(50, 500)} snapshots from 2020-2025`, delay: 250 },
+      { text: `    Found old admin panel at /wp-admin (removed)`, delay: 200 },
+      { text: `    Found exposed .env in snapshot (rotated)`, delay: 200, color: "text-term-warning" },
+    ],
+    () => [
+      { text: `[+] Google dorking ${target}...`, delay: 300 },
+      { text: `    site:${target} filetype:pdf → ${rand(2, 15)} results`, delay: 200 },
+      { text: `    site:${target} inurl:admin → ${rand(0, 3)} results`, delay: 200 },
+      { text: `    Cached login page found`, delay: 250 },
+    ],
+    () => [
+      { text: `[+] Certificate Transparency logs...`, delay: 350 },
+      { text: `    ${rand(8, 30)} certificates issued for *.${target}`, delay: 250 },
+      { text: `    Issuer: Let's Encrypt`, delay: 150 },
+      { text: `    Wildcard cert detected — broad attack surface`, delay: 200, color: "text-term-warning" },
+    ],
+    () => [
+      { text: `[+] theHarvester scan...`, delay: 300 },
+      { text: `    Emails: admin@${target}, devops@${target}`, delay: 200 },
+      { text: `    Hosts: ${rand(3, 8)} unique IPs resolved`, delay: 200 },
+      { text: `    Virtual hosts: ${rand(2, 5)} on same IP`, delay: 200 },
+    ],
+    () => [
+      { text: `[+] Reverse IP lookup on ${randIp()}...`, delay: 350 },
+      { text: `    ${rand(1, 12)} other domains on same server`, delay: 250 },
+      { text: `    Shared hosting detected — lateral movement possible`, delay: 200, color: "text-term-warning" },
+      { text: `    ASN: AS${rand(10000, 65000)} (${pick(["Cloudflare", "AWS", "Google", "OVH"])})`, delay: 200 },
+    ],
+    () => [
+      { text: `[+] Fingerprinting web technologies...`, delay: 300 },
+      { text: `    Framework: ${pick(["Next.js 16", "React 19", "Nuxt 4", "Remix 3"])}`, delay: 200 },
+      { text: `    Server: ${pick(["nginx/1.24", "Caddy/2.7", "Apache/2.4"])}`, delay: 150 },
+      { text: `    CDN: ${pick(["Cloudflare", "Fastly", "CloudFront", "Vercel Edge"])}`, delay: 150 },
+      { text: `    WAF: ${pick(["Cloudflare WAF", "AWS WAF", "ModSecurity", "Sucuri"])} detected`, delay: 200 },
+    ],
+  ];
+}
+
+/** Phase 2: Scanning — each returns HackerLine[] */
+function scanScenarios(target: string): (() => HackerLine[])[] {
+  return [
+    () => [
+      { text: `[+] SYN scan on ${rand(1000, 65535)} ports...`, delay: 500 },
+      { text: `    22/tcp   open  ssh       OpenSSH 8.9`, delay: 120 },
+      { text: `    443/tcp  open  https     nginx/1.24`, delay: 120 },
+      { text: `    5432/tcp open  postgresql PostgreSQL 16`, delay: 120 },
+      { text: `[+] ${rand(3, 6)} open ports found`, delay: 200 },
+    ],
+    () => [
+      { text: `[+] Nmap aggressive scan (-A)...`, delay: 600 },
+      { text: `    OS: Linux 6.x (${rand(90, 99)}% confidence)`, delay: 200 },
+      { text: `    Traceroute: ${rand(5, 15)} hops`, delay: 150 },
+      { text: `    Scripts: ${rand(12, 40)} NSE scripts executed`, delay: 200 },
+      { text: `    Found HTTP title: "Harris — Terminal CV"`, delay: 200, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: `[+] Nikto web vulnerability scan...`, delay: 500 },
+      { text: `    Server: nginx/1.24.0`, delay: 150 },
+      { text: `    X-Frame-Options: SAMEORIGIN ✓`, delay: 150 },
+      { text: `    X-Content-Type-Options: nosniff ✓`, delay: 150 },
+      { text: `    ${rand(0, 2)} potential findings (low severity)`, delay: 200 },
+    ],
+    () => [
+      { text: `[+] Gobuster directory brute-force...`, delay: 500 },
+      { text: `    /api          (Status: 200)`, delay: 150 },
+      { text: `    /blog         (Status: 200)`, delay: 120 },
+      { text: `    /about        (Status: 200)`, delay: 120 },
+      { text: `    /.env         (Status: 403) — blocked`, delay: 150, color: "text-term-error" },
+      { text: `    /admin        (Status: 404)`, delay: 120 },
+    ],
+    () => [
+      { text: `[+] SSL/TLS analysis (testssl.sh)...`, delay: 500 },
+      { text: `    TLS 1.3: yes ✓`, delay: 150 },
+      { text: `    TLS 1.2: yes (strong ciphers only) ✓`, delay: 150 },
+      { text: `    HSTS: enabled (max-age=${rand(15000000, 31536000)})`, delay: 150 },
+      { text: `    Certificate: valid for ${rand(30, 90)} more days`, delay: 150 },
+    ],
+    () => [
+      { text: `[+] WPScan... target is NOT WordPress`, delay: 300 },
+      { text: `[+] Falling back to nuclei templates...`, delay: 400 },
+      { text: `    Running ${rand(3000, 6000)} templates against ${target}`, delay: 300 },
+      { text: `    ${rand(0, 3)} info-level findings`, delay: 200 },
+      { text: `    0 critical findings`, delay: 150 },
+    ],
+    () => [
+      { text: `[+] Masscan UDP scan (top 100 ports)...`, delay: 500 },
+      { text: `    53/udp    open  DNS`, delay: 120 },
+      { text: `    123/udp   open  NTP`, delay: 120 },
+      { text: `    All other UDP ports: filtered`, delay: 200 },
+      { text: `[+] Firewall is blocking most UDP traffic`, delay: 200 },
+    ],
+    () => [
+      { text: `[+] API endpoint enumeration...`, delay: 400 },
+      { text: `    GET  /api/blog       → 200 (${rand(10, 50)} entries)`, delay: 150 },
+      { text: `    GET  /api/guestbook  → 200 (rate-limited)`, delay: 150 },
+      { text: `    POST /api/guestbook  → 429 (1 req/hour/IP)`, delay: 150, color: "text-term-warning" },
+      { text: `    GET  /api/health     → 200 {"status":"ok"}`, delay: 150 },
+    ],
+    () => [
+      { text: `[+] Vulnerability scan (OpenVAS)...`, delay: 600 },
+      { text: `    Scanning ${rand(1000, 5000)} CVEs against services...`, delay: 400 },
+      { text: `    High: 0  Medium: ${rand(0, 2)}  Low: ${rand(1, 5)}  Info: ${rand(3, 12)}`, delay: 250 },
+      { text: `    No exploitable vulnerabilities found`, delay: 200 },
+    ],
+    () => [
+      { text: `[+] DNS enumeration (dnsrecon)...`, delay: 400 },
+      { text: `    A     ${target} → ${randIp()}`, delay: 120 },
+      { text: `    AAAA  ${target} → 2606:4700::${randHex(4)}`, delay: 120 },
+      { text: `    MX    ${target} → mail.${target} (pri 10)`, delay: 120 },
+      { text: `    TXT   ${target} → "v=spf1 include:_spf.google.com ~all"`, delay: 150 },
+      { text: `[+] DNSSEC: enabled ✓`, delay: 150 },
+    ],
+  ];
+}
+
+/** Phase 3 FAIL scenarios — attack blocked */
+function failScenarios(target: string): (() => HackerLine[])[] {
+  return [
+    () => [
+      { text: `[*] SQL injection on /api/guestbook...`, delay: 400 },
+      { text: `[-] WAF blocked: 403 Forbidden`, delay: 300, color: "text-term-error" },
+      { text: `[*] XSS on input fields...`, delay: 350 },
+      { text: `[-] CSP headers block inline scripts`, delay: 300, color: "text-term-error" },
+    ],
+    () => [
+      { text: `[*] SSH brute-force (hydra)...`, delay: 500 },
+      { text: `    Trying admin:admin... FAILED`, delay: 200, color: "text-term-error" },
+      { text: `    Trying root:password... FAILED`, delay: 200, color: "text-term-error" },
+      { text: `[-] Fail2ban: IP banned after 3 attempts`, delay: 300, color: "text-term-error" },
+    ],
+    () => [
+      { text: `[*] Path traversal on /api/blog...`, delay: 400 },
+      { text: `    ../../etc/passwd → 400 Bad Request`, delay: 250, color: "text-term-error" },
+      { text: `[-] Input sanitization in place`, delay: 300, color: "text-term-error" },
+      { text: `[*] Null byte injection...`, delay: 300 },
+      { text: `[-] Blocked by framework`, delay: 250, color: "text-term-error" },
+    ],
+    () => [
+      { text: `[*] CSRF token extraction...`, delay: 400 },
+      { text: `[-] SameSite=Strict cookies — no CSRF possible`, delay: 300, color: "text-term-error" },
+      { text: `[*] Clickjacking attempt...`, delay: 300 },
+      { text: `[-] X-Frame-Options: DENY`, delay: 250, color: "text-term-error" },
+    ],
+    () => [
+      { text: `[*] Deserialization attack on API...`, delay: 400 },
+      { text: `[-] JSON-only endpoints, no object deserialization`, delay: 300, color: "text-term-error" },
+      { text: `[*] Prototype pollution attempt...`, delay: 350 },
+      { text: `[-] Object.freeze() on critical prototypes`, delay: 300, color: "text-term-error" },
+    ],
+    () => [
+      { text: `[*] Log4Shell (CVE-2021-44228) probe...`, delay: 400 },
+      { text: `[-] Not Java-based — not vulnerable`, delay: 300, color: "text-term-error" },
+      { text: `[*] SSRF via image URL...`, delay: 350 },
+      { text: `[-] No user-controlled URL fetching endpoints`, delay: 300, color: "text-term-error" },
+    ],
+    () => [
+      { text: `[*] JWT token forgery...`, delay: 400 },
+      { text: `    Trying alg:none attack...`, delay: 300 },
+      { text: `[-] Server rejects unsigned tokens`, delay: 250, color: "text-term-error" },
+      { text: `[*] Brute-forcing JWT secret...`, delay: 400 },
+      { text: `[-] Key too strong (${rand(256, 512)}-bit)`, delay: 300, color: "text-term-error" },
+    ],
+    () => [
+      { text: `[*] GraphQL introspection probe...`, delay: 350 },
+      { text: `[-] No GraphQL endpoint found`, delay: 250, color: "text-term-error" },
+      { text: `[*] WebSocket hijacking...`, delay: 350 },
+      { text: `[-] No WebSocket endpoints exposed`, delay: 250, color: "text-term-error" },
+      { text: `[*] DNS rebinding...`, delay: 300 },
+      { text: `[-] Host header validation in place`, delay: 250, color: "text-term-error" },
+    ],
+    () => [
+      { text: `[*] XXE injection on XML parser...`, delay: 400 },
+      { text: `[-] No XML endpoints — JSON only`, delay: 300, color: "text-term-error" },
+      { text: `[*] Command injection via User-Agent...`, delay: 350 },
+      { text: `[-] Headers are sanitized before logging`, delay: 300, color: "text-term-error" },
+    ],
+    () => [
+      { text: `[*] Subdomain takeover check...`, delay: 400 },
+      { text: `    Checking CNAME for dangling records...`, delay: 300 },
+      { text: `[-] All CNAMEs resolve — no takeover possible`, delay: 300, color: "text-term-error" },
+      { text: `[*] Open redirect via /api/...`, delay: 300 },
+      { text: `[-] No redirect endpoints found`, delay: 250, color: "text-term-error" },
+    ],
+  ];
+}
+
+/** Phase 3 SUCCESS scenarios — attack succeeds */
+function successScenarios(target: string): (() => HackerLine[])[] {
+  return [
+    () => [
+      { text: `[+] SQLi bypass on /api/guestbook!`, delay: 300, color: "text-term-prompt" },
+      { text: `[*] Dumping database...`, delay: 500 },
+      { text: `[+] Got DB creds: admin:${randHex(8)}`, delay: 400, color: "text-term-prompt" },
+      { text: `[*] Privilege escalation via CVE-2024-${rand(10000, 49999)}...`, delay: 600 },
+      { text: `[+] Root shell obtained!`, delay: 500, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: `[+] Race condition in guestbook POST!`, delay: 400, color: "text-term-prompt" },
+      { text: `[*] Bypassing rate limiter with ${rand(50, 200)} concurrent requests...`, delay: 500 },
+      { text: `[+] Rate limit bypassed`, delay: 300, color: "text-term-prompt" },
+      { text: `[*] Chaining with IDOR on user endpoint...`, delay: 500 },
+      { text: `[+] Admin token extracted!`, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: `[+] Leaked .env found in Docker layer!`, delay: 400, color: "text-term-prompt" },
+      { text: `    DATABASE_URL=postgres://admin:${randHex(12)}@db:5432/harris`, delay: 300 },
+      { text: `[*] Connecting to PostgreSQL directly...`, delay: 500 },
+      { text: `[+] Database accessed — ${rand(5, 20)} tables dumped`, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: `[+] SSRF via blog image proxy!`, delay: 400, color: "text-term-prompt" },
+      { text: `[*] Pivoting to internal metadata service...`, delay: 500 },
+      { text: `    http://169.254.169.254/latest/meta-data/`, delay: 300 },
+      { text: `[+] Cloud credentials extracted!`, delay: 400, color: "text-term-prompt" },
+      { text: `[+] Full infrastructure access gained`, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: `[+] Prototype pollution in JSON parser!`, delay: 400, color: "text-term-prompt" },
+      { text: `[*] Injecting __proto__.isAdmin = true...`, delay: 400 },
+      { text: `[+] Admin privileges escalated`, delay: 300, color: "text-term-prompt" },
+      { text: `[*] Spawning reverse shell via child_process...`, delay: 600 },
+      { text: `[+] Shell obtained on ${randIp()}:${rand(4000, 9000)}`, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: `[+] JWT secret brute-forced: "${pick(["secret", "harris123", "changeme"])}"`, delay: 500, color: "text-term-prompt" },
+      { text: `[*] Forging admin JWT token...`, delay: 400 },
+      { text: `[+] Token accepted by server!`, delay: 300, color: "text-term-prompt" },
+      { text: `[*] Accessing /api/admin/users...`, delay: 400 },
+      { text: `[+] Full user database dumped (${rand(100, 5000)} records)`, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: `[+] Nginx misconfiguration found!`, delay: 400, color: "text-term-prompt" },
+      { text: `    /server-status endpoint exposed`, delay: 300 },
+      { text: `[*] Extracting internal IPs from status page...`, delay: 400 },
+      { text: `[+] Found Docker network: 172.18.0.0/16`, delay: 300, color: "text-term-prompt" },
+      { text: `[*] Lateral movement to database container...`, delay: 500 },
+      { text: `[+] PostgreSQL container compromised!`, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: `[+] Dependency confusion attack!`, delay: 400, color: "text-term-prompt" },
+      { text: `    Published malicious "harris-utils" to npm`, delay: 300 },
+      { text: `[*] Waiting for CI/CD pipeline to install...`, delay: 600 },
+      { text: `[+] Malicious postinstall script executed!`, delay: 400, color: "text-term-prompt" },
+      { text: `[+] Build server shell obtained`, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: `[+] Git repository exposed at /.git/`, delay: 400, color: "text-term-prompt" },
+      { text: `[*] Downloading git objects...`, delay: 500 },
+      { text: `[+] Full source code reconstructed`, delay: 300, color: "text-term-prompt" },
+      { text: `[*] Found hardcoded API key in commit ${randHex(7)}`, delay: 400 },
+      { text: `[+] API key valid — cloud services compromised`, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: `[+] WebSocket upgrade smuggling!`, delay: 400, color: "text-term-prompt" },
+      { text: `[*] Bypassing reverse proxy via H2C smuggling...`, delay: 500 },
+      { text: `[+] Direct access to Node.js process`, delay: 300, color: "text-term-prompt" },
+      { text: `[*] Injecting eval() via debug endpoint...`, delay: 500 },
+      { text: `[+] Remote code execution achieved!`, delay: 400, color: "text-term-prompt" },
+    ],
+  ];
+}
+
 /* ── nmap ── */
 
 register({
@@ -45,8 +348,8 @@ register({
   execute: (args) => {
     const target = args[0] || "harris.cv";
     const ip = randIp();
-    const ports = OPEN_PORTS.slice(0, rand(3, 7)).sort((a, b) => a.port - b.port);
-    const closed = CLOSED_PORTS.slice(0, rand(2, 4));
+    const ports = pickN(OPEN_PORTS, rand(3, 7)).sort((a, b) => a.port - b.port);
+    const closed = pickN(CLOSED_PORTS, rand(2, 4));
 
     const lines: HackerLine[] = [
       { text: "", delay: 0 },
@@ -223,63 +526,43 @@ register({
     const target = args[0] || "harris.cv";
     const ip = randIp();
     // Odd minute = success, even minute = fail
-    const success = new Date().getMinutes() % 2 === 1;
+    const isOddMinute = new Date().getMinutes() % 2 !== 0;
+
+    // Pick one random scenario from each pool
+    const recon = pick(reconScenarios(target))();
+    const scan = pick(scanScenarios(target))();
 
     const lines: HackerLine[] = [
       { text: "", delay: 0 },
       { text: `[*] Target: ${target} (${ip})`, delay: 300, color: "text-term-accent" },
-      { text: `[*] Initializing attack framework v4.2.0...`, delay: 500 },
+      { text: `[*] Initializing attack framework v${rand(3, 5)}.${rand(0, 9)}.${rand(0, 9)}...`, delay: 500 },
       { text: "", delay: 200 },
 
-      // Phase 1: Recon
+      // Phase 1: Recon (random)
       { text: `── Phase 1: Reconnaissance ──`, delay: 400, color: "text-term-warning" },
-      { text: `[+] Enumerating subdomains...`, delay: 300 },
-      { text: `    Found: api.${target}`, delay: 200 },
-      { text: `    Found: admin.${target}`, delay: 150 },
-      { text: `    Found: staging.${target}`, delay: 180 },
-      { text: `    Found: cdn.${target}`, delay: 120 },
-      { text: `[+] DNS records resolved (${rand(4, 8)} entries)`, delay: 300 },
-      { text: `[+] Whois lookup complete`, delay: 250 },
-      { text: `[+] Technology stack identified: Next.js, TypeScript, PostgreSQL`, delay: 400, color: "text-term-prompt" },
+      ...recon,
       { text: "", delay: 200 },
 
-      // Phase 2: Scanning
+      // Phase 2: Scanning (random)
       { text: `── Phase 2: Scanning ──`, delay: 400, color: "text-term-warning" },
-      { text: `[+] Running SYN scan on ${rand(1000, 65535)} ports...`, delay: 600 },
-      { text: `    22/tcp   open  ssh       OpenSSH 8.9`, delay: 150 },
-      { text: `    80/tcp   open  http      nginx/1.24`, delay: 120 },
-      { text: `    443/tcp  open  https     nginx/1.24`, delay: 130 },
-      { text: `    5432/tcp open  postgresql PostgreSQL 16`, delay: 140 },
-      { text: `[+] OS fingerprint: Linux 6.x (98% confidence)`, delay: 300 },
-      { text: `[+] Firewall detected: iptables + cloudflare WAF`, delay: 350 },
+      ...scan,
       { text: "", delay: 200 },
 
-      // Phase 3: Exploitation
+      // Phase 3: Exploitation (random)
       { text: `── Phase 3: Exploitation ──`, delay: 400, color: "text-term-warning" },
-      { text: `[*] Checking CVE database... ${rand(3, 12)} potential vectors`, delay: 500 },
-      { text: `[*] Testing SQL injection on /api endpoints...`, delay: 400 },
     ];
 
-    if (success) {
-      // Odd minute — hack succeeds
+    if (isOddMinute) {
+      // Success path
+      const exploit = pick(successScenarios(target))();
       lines.push(
-        { text: `[+] SQLi bypass found on /api/guestbook!`, delay: 300, color: "text-term-prompt" },
-        { text: `[*] Extracting database credentials...`, delay: 500 },
-        { text: `[+] Got DB creds: admin:${randHex(8)}`, delay: 400, color: "text-term-prompt" },
-        { text: `[*] Escalating privileges via CVE-2024-${rand(10000, 49999)}...`, delay: 600 },
-        { text: `[+] Privilege escalation successful!`, delay: 500, color: "text-term-prompt" },
-        { text: `[*] Spawning reverse shell on ${randIp()}:4444...`, delay: 700 },
-        { text: `[+] Connection established!`, delay: 500, color: "text-term-prompt" },
+        ...exploit,
         { text: "", delay: 300 },
         { text: `══════════════════════════════════════════════`, delay: 300, color: "text-term-prompt" },
         { text: `  ACCESS GRANTED — root shell obtained`, delay: 400, color: "text-term-prompt" },
         { text: `══════════════════════════════════════════════`, delay: 200, color: "text-term-prompt" },
-        { text: "", delay: 200 },
-        { text: `root@${target}:~# cat /etc/shadow`, delay: 500 },
-        { text: `root:$6$${randHex(16)}:19741:0:99999:7:::`, delay: 200 },
-        { text: `harris:$6$${randHex(16)}:19741:0:99999:7:::`, delay: 200 },
         { text: "", delay: 300 },
-        { text: `root@${target}:~# cat /root/secret.txt`, delay: 500 },
+        { text: `root@${target}:~# cat /root/flag.txt`, delay: 500 },
         { text: "", delay: 400 },
         { text: `  "Just kidding. This is a simulated terminal."`, delay: 300, color: "text-term-accent" },
         { text: `  "But the skills on this CV are very real."`, delay: 300, color: "text-term-accent" },
@@ -287,15 +570,10 @@ register({
         { text: "", delay: 0 },
       );
     } else {
-      // Even minute — hack fails
+      // Fail path
+      const fail = pick(failScenarios(target))();
       lines.push(
-        { text: `[-] WAF blocked SQLi attempts`, delay: 300, color: "text-term-error" },
-        { text: `[*] Testing XSS on input fields...`, delay: 400 },
-        { text: `[-] CSP headers prevent XSS`, delay: 300, color: "text-term-error" },
-        { text: `[*] Attempting SSH brute-force...`, delay: 500 },
-        { text: `[-] Fail2ban detected, IP banned after 3 attempts`, delay: 400, color: "text-term-error" },
-        { text: `[*] Trying directory traversal...`, delay: 400 },
-        { text: `[-] Path sanitization in place`, delay: 300, color: "text-term-error" },
+        ...fail,
         { text: "", delay: 300 },
         { text: `══════════════════════════════════════════`, delay: 300, color: "text-term-accent" },
         { text: `  ACCESS DENIED — System is well-secured`, delay: 400, color: "text-term-error" },
@@ -321,7 +599,7 @@ register({
   execute: (args) => {
     const target = args[0] || "harris.cv";
     const ip = randIp();
-    const cve = `CVE-${2024}-${rand(10000, 49999)}`;
+    const cve = `CVE-2024-${rand(10000, 49999)}`;
 
     const lines: HackerLine[] = [
       { text: "", delay: 0 },
