@@ -1,4 +1,4 @@
-import { register } from "./registry";
+import { register, getAllCommands } from "./registry";
 import { c } from "./format-helpers";
 import { profile } from "@/data/profile";
 import { QUOTES } from "@/data/quotes";
@@ -120,9 +120,27 @@ register({
       };
     }
 
+    // Check if the argument is a known command
+    const cmdName = args[0]?.toLowerCase();
+    const knownCmd = cmdName && getAllCommands().some((cmd) => cmd.name === cmdName);
+
+    if (knownCmd) {
+      return {
+        type: "jsx",
+        content: (
+          <div className="whitespace-pre-wrap font-mono">
+            <div>{c("[sudo]", "text-term-error")} user {c("harris", "text-term-prompt")} is not in the sudoers file.</div>
+            <div>{c("[sudo]", "text-term-error")} This incident will be reported.</div>
+            <div>{""}</div>
+            <div>Contact {c(profile.email, "text-term-link")} to request elevated access.</div>
+          </div>
+        ),
+      };
+    }
+
     return {
       type: "error",
-      content: `sudo: unknown command: ${args.join(" ")}`,
+      content: `sudo: ${args.join(" ")}: command not found`,
     };
   },
 });

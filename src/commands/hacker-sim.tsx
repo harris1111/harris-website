@@ -14,7 +14,7 @@ import { profile } from "@/data/profile";
 
 register({
   name: "nmap",
-  description: "Simulate a network port scan",
+  description: "Network port scanner",
   usage: "nmap <target>",
   execute: (args) => {
     const target = args[0] || SITE_HOST;
@@ -63,7 +63,7 @@ register({
 
 register({
   name: "ping",
-  description: "Simulate ICMP ping to a host",
+  description: "Send ICMP ping to a host",
   usage: "ping <host>",
   execute: (args) => {
     const host = args[0] || SITE_HOST;
@@ -97,7 +97,7 @@ register({
 
 register({
   name: "traceroute",
-  description: "Simulate network route tracing",
+  description: "Trace network route to host",
   usage: "traceroute <host>",
   execute: (args) => {
     const host = args[0] || SITE_HOST;
@@ -140,7 +140,7 @@ register({
 
 register({
   name: "ssh",
-  description: "Simulate an SSH connection",
+  description: "Open SSH connection to host",
   usage: "ssh [user@]<host>",
   execute: (args) => {
     const target = args[0] || `root@${SITE_HOST}`;
@@ -178,7 +178,8 @@ register({
       { text: <>  {c("Uptime:", "text-term-prompt")}       {c(`${rand(30, 365)} days`, "text-term-accent")}</>, delay: 150 },
       { text: "", delay: 200 },
       { text: <>Last login: {c(new Date(Date.now() - rand(3600000, 86400000)).toUTCString(), "text-term-muted")} from {c(randIp(), "text-term-warning")}</>, delay: 300 },
-      { text: <>{c(user, "text-term-prompt")}@{c(host.split(".")[0], "text-term-link")}:~$ {c("Connection closed. (simulated)", "text-term-muted")}</>, delay: 800 },
+      { text: <>{c(user, "text-term-prompt")}@{c(host.split(".")[0], "text-term-link")}:~$ {c("logout", "text-term-muted")}</>, delay: 1200 },
+      { text: <>Connection to {c(host, "text-term-link")} closed.</>, delay: 400 },
     ];
 
     return { type: "jsx", content: <HackerAnimation lines={lines} /> };
@@ -189,7 +190,7 @@ register({
 
 register({
   name: "hack",
-  description: "Simulate a full hacking sequence",
+  description: "Launch attack on target",
   usage: "hack <target>",
   execute: (args) => {
     const target = args[0] || SITE_HOST;
@@ -249,7 +250,7 @@ register({
 
 register({
   name: "exploit",
-  description: "Simulate running an exploit",
+  description: "Run exploit against target",
   usage: "exploit <target>",
   execute: (args) => {
     const target = args[0] || SITE_HOST;
@@ -287,7 +288,7 @@ register({
 
 register({
   name: "decrypt",
-  description: "Simulate decrypting an encrypted file",
+  description: "Decrypt an encrypted file",
   usage: "decrypt <file>",
   execute: (args) => {
     const file = args[0] || "secret.enc";
