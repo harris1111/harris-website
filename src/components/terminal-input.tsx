@@ -37,10 +37,10 @@ function HighlightedValue({ value }: { value: string }) {
       // First token = command
       if (i === 0 && token.trim()) {
         if (isValidCmd) {
-          return <span key={i} className="text-term-accent">{token}</span>;
+          return <span key={i} className="text-term-warning">{token}</span>;
         }
         if (isPartialCmd) {
-          return <span key={i} className="text-term-warning">{token}</span>;
+          return <span key={i} className="text-term-link">{token}</span>;
         }
         return <span key={i} className="text-term-error">{token}</span>;
       }
