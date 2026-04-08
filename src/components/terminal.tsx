@@ -5,7 +5,7 @@ import { TerminalOutput } from "./terminal-output";
 import { TerminalInput } from "./terminal-input";
 import { useTerminal } from "@/hooks/use-terminal";
 import { useTypewriter } from "@/hooks/use-typewriter";
-import { WELCOME_LINES } from "@/data/ascii-banner";
+import { WELCOME_LINES, SECRET_HINT } from "@/data/ascii-banner";
 import { registerAllCommands } from "@/commands/builtin";
 import { CrtOverlay } from "./crt-overlay";
 import { applyTheme, defaultTheme } from "@/themes/themes";
@@ -44,7 +44,7 @@ export function Terminal() {
   }, [terminal]);
 
   const { displayedLines, isComplete, skip } = useTypewriter({
-    lines: WELCOME_LINES,
+    lines: [...WELCOME_LINES, ...SECRET_HINT, ""],
     speed: 30,
     lineDelay: 200,
     onComplete: onWelcomeComplete,
@@ -105,6 +105,13 @@ export function Terminal() {
               {line}
             </div>
           ))}
+          {/* Secret hint with distinct warning color */}
+          {SECRET_HINT.map((line, i) => (
+            <div key={`hint-${i}`} className="whitespace-pre-wrap text-term-warning">
+              {line}
+            </div>
+          ))}
+          <div className="whitespace-pre-wrap">{""}</div>
 
           {/* Output + inline input */}
           <TerminalOutput entries={terminal.outputs} />

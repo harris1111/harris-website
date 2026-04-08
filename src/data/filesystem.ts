@@ -27,9 +27,9 @@ export const fsRoot: FSNode = {
       name: ".classified",
       type: "file",
       content: () => [
-        "╔══════════════════════════════════════════╗",
-        "║  CLASSIFIED — AUTHORIZED PERSONNEL ONLY  ║",
-        "╚══════════════════════════════════════════╝",
+        "+--------------------------------------------+",
+        "|  CLASSIFIED -- AUTHORIZED PERSONNEL ONLY   |",
+        "+--------------------------------------------+",
         "",
         "From: root@harris-cv",
         "To: visitor",

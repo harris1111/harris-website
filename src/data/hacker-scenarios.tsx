@@ -340,3 +340,170 @@ export function successScenarios(t: string): (() => HackerLine[])[] {
     ],
   ];
 }
+
+/* ── Site-specific scenarios (only for own domain) ── */
+
+/** Recon scenarios exclusive to the site -- references real tech stack */
+export function siteReconScenarios(t: string): (() => HackerLine[])[] {
+  return [
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Deep recon on {c(t, "text-term-link")}...</>, delay: 300 },
+      { text: <>    Docker registry exposed at {c(`ghcr.io/harris1111/${t}`, "text-term-link")}</>, delay: 250 },
+      { text: <>    Image layers leaked -- {c("Next.js 16", "text-term-prompt")} + {c("Prisma 7", "text-term-prompt")} + {c("PostgreSQL", "text-term-prompt")}</>, delay: 200 },
+      { text: <>    {c(".env.example", "text-term-warning")} found in git history -- database schema exposed</>, delay: 200 },
+      { text: <>{c("[+]", "text-term-accent")} Full stack fingerprinted from Docker metadata</>, delay: 250 },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} GitHub Actions workflow analysis...</>, delay: 350 },
+      { text: <>    Found {c("deploy.yml", "text-term-link")} -- CI/CD pipeline to {c("ghcr.io", "text-term-link")}</>, delay: 200 },
+      { text: <>    Build secrets: {c("POSTGRES_PASSWORD", "text-term-error")}, {c("DOCKER_TOKEN", "text-term-error")}</>, delay: 200 },
+      { text: <>    Deployment target: {c("VPS via Docker Compose + Nginx", "text-term-warning")}</>, delay: 200 },
+      { text: <>{c("[+]", "text-term-accent")} Infrastructure topology mapped from CI config</>, delay: 250 },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Prisma schema extraction...</>, delay: 300 },
+      { text: <>    Model: {c("GuestbookEntry", "text-term-prompt")} (id, name, message, createdAt)</>, delay: 200 },
+      { text: <>    DB adapter: {c("@prisma/adapter-pg", "text-term-link")} with connection pooling</>, delay: 200 },
+      { text: <>    Rate limiter: {c("in-memory Map", "text-term-warning")} -- resets on restart</>, delay: 200 },
+      { text: <>{c("[+]", "text-term-accent")} Database schema fully reconstructed</>, delay: 250 },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Nginx reverse proxy fingerprinting...</>, delay: 350 },
+      { text: <>    Upstream: {c("localhost:3000", "text-term-link")} (Next.js standalone)</>, delay: 200 },
+      { text: <>    SSL: {c("Let's Encrypt", "text-term-prompt")} with auto-renewal via certbot</>, delay: 200 },
+      { text: <>    Caching: static assets {c("1 year immutable", "text-term-warning")}</>, delay: 200 },
+      { text: <>{c("[+]", "text-term-accent")} Full reverse proxy config deduced</>, delay: 200 },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Git commit history analysis...</>, delay: 300 },
+      { text: <>    {c("51b770c", "text-term-warning")} content: rewrite 10 blog posts</>, delay: 150 },
+      { text: <>    {c("a577935", "text-term-warning")} feat: blog TOC and theme support</>, delay: 150 },
+      { text: <>    {c("8055d67", "text-term-warning")} fix: server-side markdown rendering</>, delay: 150 },
+      { text: <>    Author: {c("harris1111", "text-term-prompt")} -- commit signing {c("disabled", "text-term-error")}</>, delay: 200 },
+      { text: <>{c("[+]", "text-term-accent")} Commit impersonation vector identified</>, delay: 250 },
+    ],
+  ];
+}
+
+/** Scan scenarios exclusive to the site */
+export function siteScanScenarios(t: string): (() => HackerLine[])[] {
+  return [
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Deep scan on Next.js 16 API routes...</>, delay: 500 },
+      { text: <>    {c("POST", "text-term-warning")} {c("/api/guestbook", "text-term-link")} -- body: name, message (no auth)</>, delay: 150 },
+      { text: <>    Rate limit: {c("1 req/hour/IP", "text-term-error")} via {c("x-forwarded-for", "text-term-prompt")}</>, delay: 150 },
+      { text: <>    Header spoofable behind {c("Nginx proxy", "text-term-warning")}</>, delay: 200 },
+      { text: <>{c("[+]", "text-term-accent")} Rate limit bypass vector confirmed</>, delay: 200 },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Docker container escape analysis...</>, delay: 500 },
+      { text: <>    Container: {c("harris-website", "text-term-prompt")} running as {c("nextjs:1001", "text-term-link")}</>, delay: 200 },
+      { text: <>    Volumes: {c("/app/.next", "text-term-link")}, {c("/app/content", "text-term-link")} mounted</>, delay: 200 },
+      { text: <>    Network: {c("bridge", "text-term-warning")} -- can reach {c("postgres:5432", "text-term-error")}</>, delay: 200 },
+      { text: <>{c("[+]", "text-term-accent")} Container-to-database lateral movement possible</>, delay: 250 },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Profanity filter bypass testing...</>, delay: 400 },
+      { text: <>    Filter: {c("word-list based", "text-term-prompt")} + {c("HTML sanitizer", "text-term-prompt")}</>, delay: 200 },
+      { text: <>    Unicode homoglyph: {c("BYPASSED", "text-term-error")}</>, delay: 200 },
+      { text: <>    Zero-width chars: {c("BYPASSED", "text-term-error")}</>, delay: 200 },
+      { text: <>{c("[+]", "text-term-accent")} Guestbook input validation weaknesses found</>, delay: 250 },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Markdown blog renderer analysis...</>, delay: 500 },
+      { text: <>    Engine: {c("react-markdown", "text-term-prompt")} + {c("remark-gfm", "text-term-prompt")}</>, delay: 200 },
+      { text: <>    XSS in code blocks: {c("blocked", "text-term-accent")} (sanitized)</>, delay: 150 },
+      { text: <>    But {c("shiki", "text-term-warning")} accepts arbitrary lang strings</>, delay: 200 },
+      { text: <>{c("[+]", "text-term-accent")} Potential ReDoS via crafted language identifier</>, delay: 250 },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} VPS infrastructure scan...</>, delay: 500 },
+      { text: <>    SSH: {c("port 22", "text-term-link")} open -- {c("OpenSSH 8.9", "text-term-prompt")}</>, delay: 150 },
+      { text: <>    Postgres: {c("5432", "text-term-link")} bound to {c("172.18.0.0/16", "text-term-warning")} (Docker internal)</>, delay: 200 },
+      { text: <>    Backup: {c("pg_dump", "text-term-prompt")} to {c("/var/backups/", "text-term-link")} -- {c("world-readable", "text-term-error")}</>, delay: 200 },
+      { text: <>{c("[+]", "text-term-accent")} Database backup exfiltration path found</>, delay: 250 },
+    ],
+  ];
+}
+
+/** Exploit success scenarios exclusive to the site -- very aggressive */
+export function siteSuccessScenarios(t: string): (() => HackerLine[])[] {
+  return [
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} X-Forwarded-For header spoofing!</>, delay: 300 },
+      { text: <>{c("[*]", "text-term-muted")} Rotating IPs to bypass rate limiter...</>, delay: 400 },
+      { text: <>{c("[+]", "text-term-accent")} {c("429", "text-term-error")} bypassed -- unlimited guestbook writes</>, delay: 300 },
+      { text: <>{c("[*]", "text-term-muted")} Injecting {c("'; DROP TABLE guestbook;--", "text-term-error")} into message...</>, delay: 500 },
+      { text: <>{c("[+]", "text-term-accent")} SQL injection successful -- database wiped!</>, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Docker socket access via container escape!</>, delay: 400 },
+      { text: <>{c("[*]", "text-term-muted")} Mounting host filesystem from container...</>, delay: 500 },
+      { text: <>{c("[+]", "text-term-accent")} Host {c("/etc/shadow", "text-term-error")} accessible</>, delay: 300 },
+      { text: <>{c("[*]", "text-term-muted")} Cracking root hash with {c("hashcat", "text-term-prompt")}...</>, delay: 600 },
+      { text: <>{c("[+]", "text-term-accent")} VPS root access via container breakout!</>, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} GitHub Actions secret extraction!</>, delay: 400 },
+      { text: <>{c("[*]", "text-term-muted")} Triggering workflow with malicious PR...</>, delay: 500 },
+      { text: <>{c("[+]", "text-term-accent")} {c("DOCKER_TOKEN", "text-term-error")} leaked in build logs</>, delay: 300 },
+      { text: <>{c("[*]", "text-term-muted")} Pushing backdoored image to {c("ghcr.io", "text-term-link")}...</>, delay: 600 },
+      { text: <>{c("[+]", "text-term-accent")} Supply chain compromised -- next deploy loads our payload</>, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Prisma query injection via guestbook API!</>, delay: 400 },
+      { text: <>{c("[*]", "text-term-muted")} Exploiting raw SQL in {c("@prisma/adapter-pg", "text-term-prompt")}...</>, delay: 500 },
+      { text: <>{c("[+]", "text-term-accent")} Database credentials from connection string</>, delay: 300 },
+      { text: <>{c("[*]", "text-term-muted")} Connecting to PostgreSQL at {c("172.18.0.2:5432", "text-term-link")}...</>, delay: 500 },
+      { text: <>{c("[+]", "text-term-accent")} Full database dump -- all tables exfiltrated</>, delay: 400, color: "text-term-prompt" },
+    ],
+    () => [
+      { text: <>{c("[+]", "text-term-accent")} Nginx cache poisoning via Host header!</>, delay: 400 },
+      { text: <>{c("[*]", "text-term-muted")} Sending request with {c("Host: evil.com", "text-term-error")}...</>, delay: 500 },
+      { text: <>{c("[+]", "text-term-accent")} Cache poisoned -- serving malicious content</>, delay: 400 },
+      { text: <>{c("[*]", "text-term-muted")} Escalating to {c("SSRF", "text-term-error")} via internal redirect...</>, delay: 500 },
+      { text: <>{c("[+]", "text-term-accent")} Internal network mapped -- pivoting to backup server</>, delay: 400, color: "text-term-prompt" },
+    ],
+  ];
+}
+
+/** Fail scenarios exclusive to the site */
+export function siteFailScenarios(t: string): (() => HackerLine[])[] {
+  return [
+    () => [
+      { text: <>{c("[*]", "text-term-muted")} SQL injection on {c("/api/guestbook", "text-term-link")}...</>, delay: 400 },
+      { text: <>    Payload: {c("'; DROP TABLE guestbook;--", "text-term-error")}</>, delay: 300 },
+      { text: <>{c("[-]", "text-term-error")} {c("Prisma", "text-term-prompt")} parameterized queries blocked it</>, delay: 300 },
+      { text: <>{c("[*]", "text-term-muted")} Trying {c("UNION SELECT", "text-term-error")} on blog API...</>, delay: 400 },
+      { text: <>{c("[-]", "text-term-error")} Blog uses filesystem reads -- no SQL at all</>, delay: 300 },
+    ],
+    () => [
+      { text: <>{c("[*]", "text-term-muted")} Docker container escape attempt...</>, delay: 400 },
+      { text: <>    Running as {c("nextjs:1001", "text-term-prompt")} -- non-root</>, delay: 250 },
+      { text: <>{c("[-]", "text-term-error")} No {c("--privileged", "text-term-warning")} flag -- capabilities dropped</>, delay: 300 },
+      { text: <>{c("[*]", "text-term-muted")} Trying {c("CVE-2024-21626", "text-term-warning")} (runc escape)...</>, delay: 400 },
+      { text: <>{c("[-]", "text-term-error")} Container runtime patched -- escape blocked</>, delay: 300 },
+    ],
+    () => [
+      { text: <>{c("[*]", "text-term-muted")} GitHub Actions workflow poisoning...</>, delay: 400 },
+      { text: <>    Submitting malicious {c("deploy.yml", "text-term-link")} via fork PR...</>, delay: 300 },
+      { text: <>{c("[-]", "text-term-error")} Workflow requires {c("maintainer approval", "text-term-accent")}</>, delay: 300 },
+      { text: <>{c("[*]", "text-term-muted")} Trying {c("GITHUB_TOKEN", "text-term-error")} scope escalation...</>, delay: 400 },
+      { text: <>{c("[-]", "text-term-error")} Token scoped to {c("read-only", "text-term-accent")} for fork PRs</>, delay: 300 },
+    ],
+    () => [
+      { text: <>{c("[*]", "text-term-muted")} X-Forwarded-For spoofing...</>, delay: 400 },
+      { text: <>    Sending from spoofed IP {c(randIp(), "text-term-warning")}...</>, delay: 300 },
+      { text: <>{c("[-]", "text-term-error")} Nginx {c("real_ip_module", "text-term-prompt")} strips untrusted headers</>, delay: 300 },
+      { text: <>{c("[*]", "text-term-muted")} Trying {c("X-Real-IP", "text-term-warning")} header instead...</>, delay: 300 },
+      { text: <>{c("[-]", "text-term-error")} Same result -- only Nginx's own IP trusted</>, delay: 300 },
+    ],
+    () => [
+      { text: <>{c("[*]", "text-term-muted")} Attacking PostgreSQL directly...</>, delay: 400 },
+      { text: <>    {c("5432", "text-term-link")} bound to {c("172.18.0.0/16", "text-term-warning")} only</>, delay: 250 },
+      { text: <>{c("[-]", "text-term-error")} Port not exposed to public network</>, delay: 300 },
+      { text: <>{c("[*]", "text-term-muted")} DNS rebinding to reach Docker network...</>, delay: 400 },
+      { text: <>{c("[-]", "text-term-error")} {c("pg_hba.conf", "text-term-prompt")} rejects non-local connections</>, delay: 300 },
+    ],
+  ];
+}

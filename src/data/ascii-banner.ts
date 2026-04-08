@@ -13,7 +13,10 @@ export const WELCOME_LINES = [
   'Type "help" to see available commands.',
   'Type "open about" or "open blog" to visit other pages.',
   "",
+];
+
+/** Secret hint — shown after welcome, styled differently */
+export const SECRET_HINT = [
   "Psst... there's a secret hidden in this terminal.",
   'Start with "ls -la" and see what you find.',
-  "",
 ];

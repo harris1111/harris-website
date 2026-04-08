@@ -5,6 +5,7 @@ import {
   rand, pick, pickN, randIp, randMs, randHex,
   OPEN_PORTS, CLOSED_PORTS,
   reconScenarios, scanScenarios, failScenarios, successScenarios,
+  siteReconScenarios, siteScanScenarios, siteFailScenarios, siteSuccessScenarios,
 } from "@/data/hacker-scenarios";
 import { successOutros, failOutros } from "@/data/hacker-outros";
 import { SITE_HOST, SITE_URL } from "@/lib/site-config";
@@ -212,8 +213,11 @@ register({
     const isOwnServer = target.toLowerCase() === SITE_HOST.toLowerCase();
     const isOddMinute = new Date().getMinutes() % 2 !== 0;
 
-    const recon = pick(reconScenarios(target))();
-    const scan = pick(scanScenarios(target))();
+    // Use site-specific scenarios for own domain, generic for others
+    const reconPool = isOwnServer ? siteReconScenarios(target) : reconScenarios(target);
+    const scanPool = isOwnServer ? siteScanScenarios(target) : scanScenarios(target);
+    const recon = pick(reconPool)();
+    const scan = pick(scanPool)();
 
     const lines: HackerLine[] = [
       { text: "", delay: 0 },
@@ -230,14 +234,15 @@ register({
     ];
 
     if (isOddMinute) {
-      const exploit = pick(successScenarios(target))();
+      const exploitPool = isOwnServer ? siteSuccessScenarios(target) : successScenarios(target);
+      const exploit = pick(exploitPool)();
       const outro = pick(successOutros(target))();
       lines.push(
         ...exploit,
         { text: "", delay: 300 },
-        { text: `══════════════════════════════════════════════`, delay: 300, color: "text-term-accent" },
+        { text: `==============================================`, delay: 300, color: "text-term-accent" },
         { text: <>{c("  ACCESS GRANTED", "text-term-accent")} — {c("root shell obtained", "text-term-prompt")}</>, delay: 400 },
-        { text: `══════════════════════════════════════════════`, delay: 200, color: "text-term-accent" },
+        { text: `==============================================`, delay: 200, color: "text-term-accent" },
         { text: "", delay: 300 },
         ...outro,
       );
@@ -263,14 +268,15 @@ register({
       }
       lines.push({ text: "", delay: 0 });
     } else {
-      const fail = pick(failScenarios(target))();
+      const failPool = isOwnServer ? siteFailScenarios(target) : failScenarios(target);
+      const fail = pick(failPool)();
       const outro = pick(failOutros(target))();
       lines.push(
         ...fail,
         { text: "", delay: 300 },
-        { text: `══════════════════════════════════════════`, delay: 300, color: "text-term-muted" },
+        { text: `==========================================`, delay: 300, color: "text-term-muted" },
         { text: <>{c("  ACCESS DENIED", "text-term-error")} — {c("System is well-secured", "text-term-accent")}</>, delay: 400 },
-        { text: `══════════════════════════════════════════`, delay: 200, color: "text-term-muted" },
+        { text: `==========================================`, delay: 200, color: "text-term-muted" },
         { text: "", delay: 300 },
         ...outro,
       );
