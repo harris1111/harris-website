@@ -106,33 +106,36 @@ register({
             <div>usage: {c("sudo", "text-term-warning")} {c("<command>", "text-term-muted")}</div>
             <div>{""}</div>
             <div>{c("Available sudo commands:", "text-term-accent")}</div>
-            <div>  {c("sudo <cmd>", "text-term-warning")}      Run a command as root</div>
-            <div>  {c("sudo ██████", "text-term-muted")}      {c("[REDACTED]", "text-term-error")} — clearance level 5 required</div>
+            <div>  {c("sudo <cmd>", "text-term-warning")}        Run a command as root</div>
+            <div>  {c("sudo ██████-██", "text-term-muted")}    {c("[REDACTED]", "text-term-error")} — clearance level 5 required</div>
             <div>{""}</div>
-            <div className="text-term-muted">Hint: some commands are worth guessing...</div>
+            <div className="text-term-muted">Hint: What would you ask a DevOps engineer to do?</div>
           </div>
         ),
       };
     }
 
     if (args.join("-").toLowerCase() === "hire-me") {
+      const linkedin = profile.social.find(s => s.platform === "LinkedIn");
+      const github = profile.social.find(s => s.platform === "GitHub");
       return {
         type: "jsx",
         content: (
           <div className="whitespace-pre-wrap font-mono">
-            {"\n"}
-            <div className="text-term-muted">  ╔══════════════════════════════════════╗</div>
-            <div className="text-term-muted">  ║                                      ║</div>
-            <div>  ║   {c("HIRE ME", "text-term-accent")} — {c("ACCESS GRANTED", "text-term-prompt")}      ║</div>
-            <div className="text-term-muted">  ║                                      ║</div>
-            <div>  ║   {c("Email:", "text-term-warning")} {c(profile.email, "text-term-link")}      ║</div>
-            <div>  ║   {c("Phone:", "text-term-warning")} {c(profile.phone, "text-term-link")}               ║</div>
-            <div>  ║   {c("LinkedIn:", "text-term-warning")} {c(profile.social.find(s => s.platform === "LinkedIn")?.url || "", "text-term-link")}       ║</div>
-            <div className="text-term-muted">  ║                                      ║</div>
-            <div>  ║   {c("Let's build something together!", "text-term-accent")}    ║</div>
-            <div className="text-term-muted">  ║                                      ║</div>
-            <div className="text-term-muted">  ╚══════════════════════════════════════╝</div>
-            {"\n"}
+            <div>{""}</div>
+            <div className="text-term-accent">  ┌─────────────────────────────────────────┐</div>
+            <div className="text-term-accent">  │                                         │</div>
+            <div>  │  {c("ACCESS GRANTED", "text-term-accent")} — {c("root privileges obtained", "text-term-prompt")}  │</div>
+            <div className="text-term-accent">  │                                         │</div>
+            <div className="text-term-accent">  └─────────────────────────────────────────┘</div>
+            <div>{""}</div>
+            <div>  {c("Email:", "text-term-warning")}     {c(profile.email, "text-term-link")}</div>
+            <div>  {c("Phone:", "text-term-warning")}     {c(profile.phone, "text-term-link")}</div>
+            {linkedin && <div>  {c("LinkedIn:", "text-term-warning")}  {c(linkedin.url, "text-term-link")}</div>}
+            {github && <div>  {c("GitHub:", "text-term-warning")}    {c(github.url, "text-term-link")}</div>}
+            <div>{""}</div>
+            <div>  {c("Let's build something together!", "text-term-accent")}</div>
+            <div>{""}</div>
           </div>
         ),
       };

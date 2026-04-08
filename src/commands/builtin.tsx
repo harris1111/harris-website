@@ -95,8 +95,8 @@ export function registerBuiltins() {
               <>
                 <div>{""}</div>
                 <div>{c("NOTES", "text-term-accent")}</div>
-                <div>    Some commands require {c("special keywords", "text-term-warning")} instead of system commands.</div>
-                <div>    The sysadmin left something behind. Think about what you'd ask for.</div>
+                <div>    Not all sudo commands are system commands.</div>
+                <div>    Try {c("sudo", "text-term-warning")} with no arguments to see what's available.</div>
               </>
             )}
           </div>
