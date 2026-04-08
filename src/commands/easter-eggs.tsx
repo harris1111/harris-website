@@ -97,6 +97,24 @@ register({
   description: "Execute with elevated privileges",
   usage: "sudo <command>",
   execute: (args) => {
+    // No args → hint at the easter egg
+    if (args.length === 0) {
+      return {
+        type: "jsx",
+        content: (
+          <div className="whitespace-pre-wrap font-mono">
+            <div>usage: {c("sudo", "text-term-warning")} {c("<command>", "text-term-muted")}</div>
+            <div>{""}</div>
+            <div>{c("Available sudo commands:", "text-term-accent")}</div>
+            <div>  {c("sudo <cmd>", "text-term-warning")}      Run a command as root</div>
+            <div>  {c("sudo ██████", "text-term-muted")}      {c("[REDACTED]", "text-term-error")} — clearance level 5 required</div>
+            <div>{""}</div>
+            <div className="text-term-muted">Hint: some commands are worth guessing...</div>
+          </div>
+        ),
+      };
+    }
+
     if (args.join("-").toLowerCase() === "hire-me") {
       return {
         type: "jsx",

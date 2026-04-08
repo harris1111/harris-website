@@ -60,6 +60,9 @@ export function registerBuiltins() {
               );
             })}
             <div className="text-term-muted">Tip: {c("<command> --help", "text-term-warning")} for details</div>
+            {Math.random() < 0.3 && (
+              <div className="text-term-muted">Psst: try {c("sudo", "text-term-warning")} with no args...</div>
+            )}
           </div>
         ),
       };
@@ -88,6 +91,14 @@ export function registerBuiltins() {
             <div>{""}</div>
             <div>{c("SYNOPSIS", "text-term-accent")}</div>
             <div>    {c(target.usage || target.name, "text-term-warning")}</div>
+            {target.name === "sudo" && (
+              <>
+                <div>{""}</div>
+                <div>{c("NOTES", "text-term-accent")}</div>
+                <div>    Some commands require {c("special keywords", "text-term-warning")} instead of system commands.</div>
+                <div>    The sysadmin left something behind. Think about what you'd ask for.</div>
+              </>
+            )}
           </div>
         ),
       };
