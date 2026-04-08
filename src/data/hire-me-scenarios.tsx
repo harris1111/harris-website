@@ -199,8 +199,9 @@ export function getHireMeScenario(): HackerLine[] {
     },
   ];
 
-  // Pick a random scenario
-  const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+  // Pick a random scenario — combine Math.random with timestamp for better distribution
+  const idx = (Math.floor(Math.random() * scenarios.length) + Date.now()) % scenarios.length;
+  const scenario = scenarios[idx];
   const lines = scenario();
 
   // Add theme unlock at the end
