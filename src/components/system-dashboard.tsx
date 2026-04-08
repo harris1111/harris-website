@@ -81,7 +81,7 @@ function Bar({ pct, color }: { pct: number; color: string }) {
   const w = Math.min(100, Math.max(0, pct));
   const c = w > 90 ? "bg-term-error" : w > 75 ? "bg-term-warning" : color;
   return (
-    <div className="w-full h-1 bg-term-selection rounded overflow-hidden">
+    <div className="w-full h-1.5 bg-term-selection rounded overflow-hidden">
       <div className={`h-full ${c} rounded transition-all duration-1000`} style={{ width: `${w}%` }} />
     </div>
   );
@@ -91,7 +91,7 @@ function MiniBar({ pct, color }: { pct: number; color: string }) {
   const w = Math.min(100, Math.max(0, pct));
   const c = w > 90 ? "bg-term-error" : w > 75 ? "bg-term-warning" : color;
   return (
-    <div className="w-12 h-1 bg-term-selection rounded overflow-hidden inline-block align-middle ml-1">
+    <div className="w-12 h-1.5 bg-term-selection rounded overflow-hidden inline-block align-middle ml-1">
       <div className={`h-full ${c} rounded transition-all duration-1000`} style={{ width: `${w}%` }} />
     </div>
   );
@@ -105,10 +105,10 @@ function CollapsedView({ m, onExpand }: { m: ReturnType<typeof useMetrics>; onEx
   const avgGpu = Math.round(m.gpus.reduce((a, g) => a + g.util, 0) / m.gpus.length);
 
   return (
-    <aside className="hidden lg:flex flex-col gap-2 w-[200px] xl:w-[220px] shrink-0 p-3 border-l border-term-border overflow-y-auto text-[10px] font-mono h-dvh">
+    <aside className="hidden lg:flex flex-col gap-2 w-[200px] xl:w-[220px] shrink-0 p-3 border-l border-term-border overflow-y-auto text-xs font-mono h-dvh">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-term-warning text-[9px] tracking-wider opacity-70">DATACENTER</span>
-        <button onClick={onExpand} className="text-[9px] text-term-link hover:text-term-accent">[expand &gt;&gt;]</button>
+        <span className="text-term-warning text-[11px] tracking-wider opacity-70">DATACENTER</span>
+        <button onClick={onExpand} className="text-[11px] text-term-link hover:text-term-accent">[expand &gt;&gt;]</button>
       </div>
 
       {/* Quick Stats */}
@@ -129,7 +129,7 @@ function CollapsedView({ m, onExpand }: { m: ReturnType<typeof useMetrics>; onEx
 
       {/* GPU Summary */}
       <div className="bg-term-bg border border-term-border rounded p-2 space-y-1">
-        <div className="text-term-warning text-[9px] tracking-wider opacity-70 mb-1">GPU x{m.gpus.length}</div>
+        <div className="text-term-warning text-[11px] tracking-wider opacity-70 mb-1">GPU x{m.gpus.length}</div>
         <div className="flex justify-between text-term-muted"><span>Avg util</span><span className="text-term-warning">{avgGpu}%</span></div>
         <Bar pct={avgGpu} color="bg-term-accent" />
         {m.gpus.map((g) => (
@@ -143,7 +143,7 @@ function CollapsedView({ m, onExpand }: { m: ReturnType<typeof useMetrics>; onEx
 
       {/* Clusters */}
       <div className="bg-term-bg border border-term-border rounded p-2 space-y-1">
-        <div className="text-term-warning text-[9px] tracking-wider opacity-70 mb-1">CLUSTERS</div>
+        <div className="text-term-warning text-[11px] tracking-wider opacity-70 mb-1">CLUSTERS</div>
         {m.clusters.map((c) => (
           <div key={c.name} className="flex items-center justify-between">
             <span className="text-term-prompt truncate w-20">{c.name.replace("prod-", "")}</span>
@@ -154,7 +154,7 @@ function CollapsedView({ m, onExpand }: { m: ReturnType<typeof useMetrics>; onEx
 
       {/* Traffic */}
       <div className="bg-term-bg border border-term-border rounded p-2 space-y-1">
-        <div className="text-term-warning text-[9px] tracking-wider opacity-70 mb-1">TRAFFIC</div>
+        <div className="text-term-warning text-[11px] tracking-wider opacity-70 mb-1">TRAFFIC</div>
         <div className="flex justify-between"><span className="text-term-muted">req/s</span><span className="text-term-accent">{(m.net.reqSec / 1000).toFixed(0)}K</span></div>
         <div className="flex justify-between"><span className="text-term-muted">pods</span><span className="text-term-accent">{m.pods.running}/{m.pods.total}</span></div>
         {m.pods.failed > 0 && <div className="flex justify-between"><span className="text-term-muted">failed</span><span className="text-term-error">{m.pods.failed}</span></div>}
@@ -175,10 +175,10 @@ function ExpandedView({ m, onCollapse }: { m: ReturnType<typeof useMetrics>; onC
   const netHist = useHistory(m.net.reqSec / 1000);
 
   return (
-    <aside className="hidden lg:flex flex-col gap-2 w-[55vw] xl:w-[50vw] 2xl:w-[45vw] shrink-0 p-3 border-l border-term-border overflow-y-auto text-[10px] font-mono h-dvh transition-all duration-300">
+    <aside className="hidden lg:flex flex-col gap-2 w-[55vw] xl:w-[50vw] 2xl:w-[45vw] shrink-0 p-3 border-l border-term-border overflow-y-auto text-xs font-mono h-dvh transition-all duration-300">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-term-warning text-[9px] tracking-wider opacity-70">DATACENTER MONITORING -- LIVE</span>
-        <button onClick={onCollapse} className="text-[9px] text-term-link hover:text-term-accent">[&lt;&lt; collapse]</button>
+        <span className="text-term-warning text-[11px] tracking-wider opacity-70">DATACENTER MONITORING -- LIVE</span>
+        <button onClick={onCollapse} className="text-[11px] text-term-link hover:text-term-accent">[&lt;&lt; collapse]</button>
       </div>
 
       {/* HA Hosts */}
@@ -187,11 +187,11 @@ function ExpandedView({ m, onCollapse }: { m: ReturnType<typeof useMetrics>; onC
           {m.hosts.map((h) => (
             <div key={h.name} className="bg-term-selection/30 rounded p-1.5 space-y-1">
               <div className="text-term-prompt font-bold">{h.name}</div>
-              <div className="text-term-muted text-[9px]">{h.model}</div>
-              <div className="text-term-muted text-[9px]">{h.cores}c / {h.ram}GB</div>
-              <div className="flex justify-between text-[9px]"><span className="text-term-muted">CPU</span><span className="text-term-warning">{h.cpu}%</span></div>
+              <div className="text-term-muted text-[11px]">{h.model}</div>
+              <div className="text-term-muted text-[11px]">{h.cores}c / {h.ram}GB</div>
+              <div className="flex justify-between text-[11px]"><span className="text-term-muted">CPU</span><span className="text-term-warning">{h.cpu}%</span></div>
               <Bar pct={h.cpu} color="bg-term-accent" />
-              <div className="flex justify-between text-[9px]"><span className="text-term-muted">MEM</span><span className="text-term-warning">{h.mem}G/{h.ram}G</span></div>
+              <div className="flex justify-between text-[11px]"><span className="text-term-muted">MEM</span><span className="text-term-warning">{h.mem}G/{h.ram}G</span></div>
               <Bar pct={(h.mem / h.ram) * 100} color="bg-term-prompt" />
             </div>
           ))}
@@ -209,11 +209,11 @@ function ExpandedView({ m, onCollapse }: { m: ReturnType<typeof useMetrics>; onC
         expand={{ on: !!charts.res, toggle: () => toggleChart("res"), content: (
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <div className="text-term-muted text-[9px] mb-1">CPU avg (50s)</div>
+              <div className="text-term-muted text-[11px] mb-1">CPU avg (50s)</div>
               <Sparkline data={cpuHist} color="bg-term-accent" />
             </div>
             <div>
-              <div className="text-term-muted text-[9px] mb-1">Memory (50s)</div>
+              <div className="text-term-muted text-[11px] mb-1">Memory (50s)</div>
               <Sparkline data={memHist} color="bg-term-prompt" />
             </div>
           </div>
@@ -233,7 +233,7 @@ function ExpandedView({ m, onCollapse }: { m: ReturnType<typeof useMetrics>; onC
           <div className="grid grid-cols-3 gap-2">
             {m.gpus.map((g) => (
               <div key={g.id}>
-                <div className="text-term-muted text-[9px] mb-0.5">GPU{g.id} {g.job}</div>
+                <div className="text-term-muted text-[11px] mb-0.5">GPU{g.id} {g.job}</div>
                 <Sparkline data={Array.from({ length: 20 }, () => r(Math.max(40, g.util - 20), Math.min(99, g.util + 5)))} color={g.util > 90 ? "bg-term-error" : "bg-term-accent"} />
               </div>
             ))}
@@ -245,19 +245,19 @@ function ExpandedView({ m, onCollapse }: { m: ReturnType<typeof useMetrics>; onC
             <div key={g.id} className="bg-term-selection/30 rounded p-1.5 space-y-0.5">
               <div className="flex justify-between">
                 <span className="text-term-prompt">GPU{g.id} {g.name}</span>
-                <span className="text-term-warning text-[9px]">{g.temp}C {g.power}W</span>
+                <span className="text-term-warning text-[11px]">{g.temp}C {g.power}W</span>
               </div>
               <div className="flex gap-2">
                 <div className="flex-1">
-                  <div className="text-[9px] text-term-muted">Util {g.util}%</div>
+                  <div className="text-[11px] text-term-muted">Util {g.util}%</div>
                   <Bar pct={g.util} color="bg-term-accent" />
                 </div>
                 <div className="flex-1">
-                  <div className="text-[9px] text-term-muted">VRAM {g.mem}/80G</div>
+                  <div className="text-[11px] text-term-muted">VRAM {g.mem}/80G</div>
                   <Bar pct={(g.mem / 80) * 100} color="bg-term-link" />
                 </div>
               </div>
-              <div className="text-[9px] text-term-muted truncate">{g.job}</div>
+              <div className="text-[11px] text-term-muted truncate">{g.job}</div>
             </div>
           ))}
         </div>
@@ -293,7 +293,7 @@ function ExpandedView({ m, onCollapse }: { m: ReturnType<typeof useMetrics>; onC
           title="TOP WORKLOADS"
           expand={{ on: !!charts.work, toggle: () => toggleChart("work"), content: (
             <div>
-              <div className="text-term-muted text-[9px] mb-1">Requests/sec (50s)</div>
+              <div className="text-term-muted text-[11px] mb-1">Requests/sec (50s)</div>
               <Sparkline data={netHist} color="bg-term-warning" />
             </div>
           )}}
@@ -343,9 +343,9 @@ function Sec({ title, children, expand }: {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <div className="text-term-warning text-[9px] tracking-wider opacity-70">{title}</div>
+        <div className="text-term-warning text-[11px] tracking-wider opacity-70">{title}</div>
         {expand && (
-          <button onClick={expand.toggle} className="text-[9px] text-term-link hover:text-term-accent px-1">
+          <button onClick={expand.toggle} className="text-[11px] text-term-link hover:text-term-accent px-1">
             {expand.on ? "[-]" : "[+]"}
           </button>
         )}
