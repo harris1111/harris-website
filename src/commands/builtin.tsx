@@ -60,9 +60,7 @@ export function registerBuiltins() {
               );
             })}
             <div className="text-term-muted">Tip: {c("<command> --help", "text-term-warning")} for details</div>
-            {Math.random() < 0.3 && (
-              <div className="text-term-muted">Psst: try {c("sudo", "text-term-warning")} with no args...</div>
-            )}
+            <div className="text-term-muted">Not all files are visible. Try {c("ls -la", "text-term-warning")} to see hidden ones.</div>
           </div>
         ),
       };
@@ -95,8 +93,8 @@ export function registerBuiltins() {
               <>
                 <div>{""}</div>
                 <div>{c("NOTES", "text-term-accent")}</div>
-                <div>    Not all sudo commands are system commands.</div>
-                <div>    Try {c("sudo", "text-term-warning")} with no arguments to see what's available.</div>
+                <div>    Some sudo commands accept special keywords.</div>
+                <div>    Run {c("sudo", "text-term-warning")} without arguments for more info.</div>
               </>
             )}
           </div>

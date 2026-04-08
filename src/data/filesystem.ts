@@ -24,6 +24,28 @@ export const fsRoot: FSNode = {
   type: "directory",
   children: [
     {
+      name: ".classified",
+      type: "file",
+      content: () => [
+        "╔══════════════════════════════════════════╗",
+        "║  CLASSIFIED — AUTHORIZED PERSONNEL ONLY  ║",
+        "╚══════════════════════════════════════════╝",
+        "",
+        "From: root@harris-cv",
+        "To: visitor",
+        "Subject: Escalation Protocol",
+        "",
+        "If you're reading this, you know how to find hidden files.",
+        "Good. You might be the kind of person we're looking for.",
+        "",
+        "The admin left a backdoor in the sudo command.",
+        "Run: sudo",
+        "Then figure out the right keyword.",
+        "",
+        "// EOF",
+      ].join("\n"),
+    },
+    {
       name: "about.txt",
       type: "file",
       content: () =>
