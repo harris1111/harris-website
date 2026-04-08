@@ -15,12 +15,15 @@ The main page is a fully interactive terminal emulator. Type commands to explore
 
 ## Features
 
-- **Terminal UI**: Command history (ArrowUp/Down), tab completion, Ctrl+L/C, auto-scroll
-- **25+ Commands**: `about`, `skills`, `experience`, `education`, `contact`, `social`, `timeline`, `projects`, `certifications`, `blog`, `guestbook`, `theme`, `neofetch`, `cowsay`, `fortune`, `sudo hire-me`, `open`, `download-cv`, `cd`, `ls`, `cat`, `pwd`, `tree`, `help`, `man`, `clear`, `history`, `whoami`, `echo`, `date`, `uname`, `matrix`
-- **Virtual Filesystem**: Navigate CV data with `cd`, `ls`, `cat`, `pwd`, `tree`
+- **Terminal UI**: Command history (ArrowUp/Down), tab completion, Ctrl+L/C, auto-scroll, live syntax highlighting
+- **33+ Commands**: CV info (`about`, `skills`, `experience`, `education`, `contact`, `social`, `timeline`, `projects`, `certifications`), file navigation (`cd`, `ls`, `cat`, `pwd`, `tree`), content (`blog`, `guestbook`, `download-cv`), system (`theme`, `help`, `man`, `clear`, `history`, `whoami`, `echo`, `date`, `uname`), hacker tools (`nmap`, `ping`, `traceroute`, `ssh`, `hack`, `exploit`, `decrypt`), fun (`neofetch`, `cowsay`, `fortune`, `sudo`, `matrix`, `open`)
+- **Hacker Simulation**: 7 commands with animated line-by-line output, 15+ scenarios per phase, progress bars, real tech stack references (Next.js, Prisma, PostgreSQL, Docker, Nginx)
+- **Virtual Filesystem**: Navigate CV data with `cd`, `ls`, `cat`, `pwd`, `tree` + hidden `.classified` file for CTF
 - **Blog System**: Markdown in `content/blog/`, terminal + web rendering, frontmatter-based
 - **Guestbook**: PostgreSQL-backed, rate-limited (1/IP/hour), profanity filter
-- **5 Themes**: dark, light, nord-dark, nord-light, matrix (CRT scanlines + glow)
+- **6 Themes**: dark, light, nord-dark, nord-light, matrix, hacker (unlockable cyberpunk neon theme)
+- **Easter Egg CTF**: Welcome banner hints → `.classified` file → `hack cv.minhan.dev` → `sudo hire-me` → unlock hacker theme + 11 mini eggs with rewards
+- **System Dashboard**: Desktop sidebar (lg+ screens) with live CPU/memory/disk metrics, Docker PS, kubectl status
 - **SEO**: JSON-LD Person schema, sitemap, robots.txt, OG/Twitter cards, SSG blog pages
 
 ## Tech Stack
@@ -150,7 +153,7 @@ harris-website/
 
 ## Terminal Commands Reference
 
-### CV Commands
+### Profile
 | Command | Description |
 |---------|------------|
 | `about` | Profile summary |
@@ -164,35 +167,62 @@ harris-website/
 | `timeline` | ASCII career timeline |
 | `download-cv` | Download CV as PDF |
 
+### Terminal
+| Command | Description |
+|---------|------------|
+| `help` | List all commands (grouped by category) |
+| `man <cmd>` | Manual page |
+| `clear` | Clear terminal (keeps welcome banner) |
+| `history` | Command history |
+| `whoami` | Current user info |
+| `echo <text>` | Print text |
+
 ### Navigation
 | Command | Description |
 |---------|------------|
 | `cd [path]` | Change directory |
-| `ls [path]` | List directory contents |
+| `ls [path]` | List directory contents (detailed, colored) |
 | `cat <file>` | Display file contents |
 | `pwd` | Print working directory |
 | `tree [-L depth]` | Display directory tree |
-| `open <page>` | Open /about, /blog, /home in browser |
+| `open <page>` | Open /about, /blog, /home |
 
-### System
+### Content
 | Command | Description |
 |---------|------------|
-| `help` | List all commands |
-| `man <cmd>` | Manual page |
-| `clear` | Clear terminal |
-| `history` | Command history |
-| `theme [name\|--list]` | Switch theme |
 | `blog [slug]` | List/read blog posts |
 | `guestbook [--write]` | Read/sign guestbook |
+| `theme [name\|--list]` | Switch theme (includes hacker theme) |
 
-### Easter Eggs
+### Hacker Tools (CTF)
+| Command | Description |
+|---------|------------|
+| `nmap <target>` | Network scan simulation |
+| `ping <target>` | Ping with latency simulation |
+| `traceroute <target>` | Trace route with hops |
+| `ssh <target>` | SSH connection attempt |
+| `hack <target>` | Exploit target server (odd minute = success, even = fail) |
+| `exploit <target>` | Run exploit payload |
+| `decrypt <cipher>` | Decrypt encrypted text |
+
+### Fun
 | Command | Description |
 |---------|------------|
 | `neofetch` | System info display |
 | `cowsay <msg>` | ASCII cow |
 | `fortune` | Random DevOps wisdom |
-| `sudo hire-me` | Contact card |
+| `date` | Current date/time |
+| `uname [-a]` | System info |
+| `sudo <cmd>` | Privilege escalation (hints at hire-me) |
 | `matrix` | Enter the Matrix |
+
+### Easter Eggs
+- **Welcome banner**: Hacker-style text scramble animation
+- **`ls -la`**: Reveals `.classified` hidden file
+- **`cat .classified`**: Hints at `hack` command
+- **`hack cv.minhan.dev`**: Success finds `/root/hire-me.sh`, fails leak "sudo hire-me"
+- **`sudo hire-me`**: 5 animated scenarios + HIRE ME ASCII art → unlocks **hacker theme**
+- **11 mini eggs**: `about tldr`, `skills flex`, `experience honest`, `education gpa`, `certifications worth`, `projects broke`, `timeline speedrun`, `contact spam`, `social stalk`, `neofetch btw`, `help 42` (each shows reward like [1/11])
 
 ## License
 
